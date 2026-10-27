@@ -1,0 +1,7 @@
+.DS_Store
+dev-data/
+*.sqlite
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
+*.csv

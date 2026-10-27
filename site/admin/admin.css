@@ -1,0 +1,293 @@
+/* Schlanke, rein funktionale Admin-Oberfläche (wie ago-sofi-site). */
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font: 15px "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #222;
+    background: #f4f4f4;
+}
+
+a {
+    color: #1982d1;
+}
+
+.admin-wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.admin-schmal {
+    max-width: 640px;
+}
+
+.admin-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem 1rem;
+    margin-bottom: 1rem;
+}
+
+.admin-header h1 {
+    margin: 0.5rem 0;
+    font-size: 1.5rem;
+}
+
+.admin-header a.btn {
+    color: #fff;
+}
+
+.admin-header-aktionen {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.admin-status {
+    margin: 0 0 1rem;
+    color: #555;
+}
+
+.kennzahlen {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.kennzahl {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 0.75rem 1rem;
+}
+
+.kennzahl h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1rem;
+    color: #555;
+}
+
+.kennzahl dl {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.2rem 1rem;
+    margin: 0;
+}
+
+.kennzahl dd {
+    margin: 0;
+    text-align: right;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.druckmenge {
+    margin: 0;
+    font-size: 2.2rem;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.warnung {
+    margin: 0.4rem 0 0;
+    padding: 0.3rem 0.5rem;
+    background: #fbf0c9;
+    color: #7a5d05;
+    border-radius: 3px;
+    font-size: 0.85rem;
+}
+
+.tabelle-scroll {
+    overflow-x: auto;
+}
+
+table.admin-tabelle {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+}
+
+table.admin-tabelle th,
+table.admin-tabelle td {
+    text-align: left;
+    vertical-align: top;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid #ddd;
+    font-size: 0.9rem;
+}
+
+table.admin-tabelle th {
+    background: #eee;
+}
+
+table.admin-tabelle .zahl {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+table.admin-tabelle tr.ist-bezahlt td {
+    background: #f3faf1;
+}
+
+table.admin-tabelle td.leer {
+    color: #7a7a7a;
+    text-align: center;
+    padding: 2rem;
+}
+
+table.admin-tabelle form {
+    display: inline;
+    margin: 0;
+}
+
+.nowrap {
+    white-space: nowrap;
+}
+
+.aktionen a {
+    margin-right: 0.75rem;
+}
+
+.tag {
+    display: inline-block;
+    padding: 0 0.5em;
+    border-radius: 999px;
+    background: #e5e5e5;
+    color: #555;
+    font-size: 0.75rem;
+}
+
+.toggle-bezahlt {
+    font: inherit;
+    padding: 0.2rem 0.5rem;
+    border: 1px solid #bbb;
+    border-radius: 3px;
+    background: #fff;
+    cursor: pointer;
+}
+
+.ist-bezahlt .toggle-bezahlt {
+    border-color: #2c6b23;
+    background: #dcf3d8;
+    color: #2c6b23;
+    font-weight: 600;
+}
+
+.link-gefahr {
+    padding: 0;
+    border: none;
+    background: none;
+    color: #c0392b;
+    font: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.admin-anzahl {
+    color: #7a7a7a;
+    font-size: 0.85rem;
+    margin: 0.5rem 0;
+}
+
+.admin-form label {
+    display: block;
+    margin: 0.9rem 0 0.25rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.admin-form label.checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.admin-form input[type=text],
+.admin-form input[type=number],
+.admin-form input[type=date],
+.admin-form textarea {
+    width: 100%;
+    padding: 0.5rem;
+    font: inherit;
+    border: 1px solid #bbb;
+    border-radius: 3px;
+}
+
+.admin-form input[type=number],
+.admin-form input[type=date] {
+    width: auto;
+}
+
+.admin-form textarea {
+    min-height: 5em;
+}
+
+.hinweis {
+    color: #666;
+    font-size: 0.85rem;
+}
+
+.admin-actions {
+    margin: 1.5rem 0;
+}
+
+.btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 3px;
+    border: none;
+    background: #1982d1;
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+    font: inherit;
+}
+
+.btn-gefahr {
+    background: #c0392b;
+}
+
+.gefahrenzone {
+    margin-top: 2.5rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid #e3b3ad;
+    border-radius: 4px;
+    background: #fff;
+}
+
+.gefahrenzone summary {
+    cursor: pointer;
+    color: #c0392b;
+    font-weight: 600;
+}
+
+.gefahrenzone .admin-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    max-width: 480px;
+}
+
+.gefahrenzone .admin-form input[type=text] {
+    flex: 1 1 200px;
+}
+
+.fehler {
+    background: #fbe0cf;
+    color: #8a3c11;
+    padding: 0.75rem 1rem;
+    border-radius: 3px;
+    margin-bottom: 1rem;
+}
+
+.erfolg {
+    background: #dcf3d8;
+    color: #2c6b23;
+    padding: 0.75rem 1rem;
+    border-radius: 3px;
+    margin-bottom: 1rem;
+}
