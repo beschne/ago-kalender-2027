@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" width="180" height="180">
+  <!-- Quelle für apple-touch-icon.png (180 x 180). Randlos und ohne Transparenz,
+       iOS rundet die Ecken selbst ab. Erzeugen mit:
+       rsvg-convert -w 180 -h 180 site/img/apple-touch-icon.svg -o site/apple-touch-icon.png -->
+  <defs>
+    <linearGradient id="himmel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1d2858"/>
+      <stop offset="100%" stop-color="#0b0f24"/>
+    </linearGradient>
+    <linearGradient id="blatt" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#e6e9ef"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="180" height="180" fill="url(#himmel)"/>
+
+  <!-- Hintergrundsterne -->
+  <g fill="#fff">
+    <circle cx="20" cy="22" r="1.6" opacity="0.9"/>
+    <circle cx="160" cy="18" r="1.3" opacity="0.7"/>
+    <circle cx="150" cy="58" r="1.1" opacity="0.6"/>
+    <circle cx="26" cy="80" r="1.2" opacity="0.6"/>
+    <circle cx="14" cy="146" r="1.4" opacity="0.7"/>
+    <circle cx="166" cy="138" r="1.6" opacity="0.8"/>
+    <circle cx="44" cy="166" r="1" opacity="0.5"/>
+    <circle cx="136" cy="168" r="1.1" opacity="0.6"/>
+  </g>
+
+  <!-- Kalenderblatt mit Schatten -->
+  <rect x="36" y="44" width="108" height="110" rx="11" fill="#000" opacity="0.35" transform="translate(0 4)"/>
+  <rect x="36" y="44" width="108" height="110" rx="11" fill="url(#blatt)"/>
+  <path d="M36 55 a11 11 0 0 1 11 -11 h86 a11 11 0 0 1 11 11 v19 h-108 z" fill="#1982d1"/>
+  <text x="90" y="67" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif"
+        font-size="17" font-weight="700" fill="#fff" letter-spacing="1">2027</text>
+
+  <!-- Ringbindung -->
+  <rect x="56" y="32" width="9" height="24" rx="4.5" fill="#d5d9e2" stroke="#0b0f24" stroke-width="2"/>
+  <rect x="115" y="32" width="9" height="24" rx="4.5" fill="#d5d9e2" stroke="#0b0f24" stroke-width="2"/>
+
+  <!-- Stern -->
+  <polygon points="90.0,83.0 96.5,101.1 115.7,101.7 100.5,113.4 105.9,131.8 90.0,121.0 74.1,131.8 79.5,113.4 64.3,101.7 83.5,101.1"
+           fill="#f4c430" stroke="#d9a514" stroke-width="1.5" stroke-linejoin="round"/>
+</svg>

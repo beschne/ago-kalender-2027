@@ -18,6 +18,7 @@ function ago_kalender_nav_class(string $item, string $activeNav): string {
     <title><?= h($title) ?></title>
     <link rel="stylesheet" href="/css/style.css?v=<?= @filemtime(__DIR__ . '/../css/style.css') ?: '1' ?>">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 </head>
 <body>
     <div id="page">
