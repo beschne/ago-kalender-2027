@@ -28,7 +28,7 @@ function ago_kalender_db(): PDO {
             id INTEGER PRIMARY KEY,
             erstellt_am TEXT NOT NULL,
             name TEXT NOT NULL,
-            anzahl INTEGER NOT NULL CHECK (anzahl BETWEEN 1 AND 20),
+            anzahl INTEGER NOT NULL CHECK (anzahl BETWEEN 1 AND 25),
             bemerkung TEXT,
             bezahlt INTEGER NOT NULL DEFAULT 0,
             bezahlt_am TEXT,
@@ -42,6 +42,34 @@ function ago_kalender_db(): PDO {
     $spalten = array_column($pdo->query('PRAGMA table_info(bestellungen)')->fetchAll(), 'name');
     if (!in_array('uebergeben', $spalten, true)) {
         $pdo->exec('ALTER TABLE bestellungen ADD COLUMN uebergeben INTEGER NOT NULL DEFAULT 0');
+    }
+
+    // SQLite kann ein CHECK nicht ändern: Bestehende Tabellen mit der alten Obergrenze 20 werden neu aufgebaut.
+    $schema = $pdo->query("SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'bestellungen'")->fetchColumn();
+    if (str_contains($schema, 'BETWEEN 1 AND 20')) {
+        $pdo->beginTransaction();
+        $pdo->exec(<<<SQL
+            CREATE TABLE bestellungen_neu (
+                id INTEGER PRIMARY KEY,
+                erstellt_am TEXT NOT NULL,
+                name TEXT NOT NULL,
+                anzahl INTEGER NOT NULL CHECK (anzahl BETWEEN 1 AND 25),
+                bemerkung TEXT,
+                bezahlt INTEGER NOT NULL DEFAULT 0,
+                bezahlt_am TEXT,
+                notiz_intern TEXT,
+                quelle TEXT DEFAULT 'formular',
+                uebergeben INTEGER NOT NULL DEFAULT 0
+            )
+            SQL);
+        $pdo->exec(<<<SQL
+            INSERT INTO bestellungen_neu (id, erstellt_am, name, anzahl, bemerkung, bezahlt, bezahlt_am, notiz_intern, quelle, uebergeben)
+            SELECT id, erstellt_am, name, anzahl, bemerkung, bezahlt, bezahlt_am, notiz_intern, quelle, uebergeben
+            FROM bestellungen
+            SQL);
+        $pdo->exec('DROP TABLE bestellungen');
+        $pdo->exec('ALTER TABLE bestellungen_neu RENAME TO bestellungen');
+        $pdo->commit();
     }
 
     return $pdo;

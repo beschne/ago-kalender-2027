@@ -18,7 +18,7 @@ const UEBERGABE = 'bei der Weihnachtsfeier im Dezember 2026';
 const LOESCHFRIST = '31.01.2027';
 
 // Grenzen für das Formular (Anzahl auch per CHECK in der Datenbank abgesichert).
-const ANZAHL_MAX = 20;
+const ANZAHL_MAX = 25;
 const NAME_MAX = 100;
 const BEMERKUNG_MAX = 500;
 const BESTELLUNGEN_PRO_SESSION = 5;

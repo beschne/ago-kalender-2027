@@ -42,7 +42,7 @@ Muster von dort übernehmen statt neu erfinden.
 
 ### Öffentlich `/`
 * Kurze Einleitung zum Kalender (Format, Preis, Bestellschluss, Übergabe)
-* Formular: **Name** (Pflicht), **Anzahl** (Pflicht, ganze Zahl 1–20), **Bemerkung** (optional,
+* Formular: **Name** (Pflicht), **Anzahl** (Pflicht, ganze Zahl 1–25), **Bemerkung** (optional,
   max. 500 Zeichen). Keine E-Mail, keine Adresse, keine Telefonnummer (Datensparsamkeit).
 * Pflicht-Checkbox: Kenntnisnahme des Datenschutzhinweises
 * Nach dem Absenden: Bestätigungsseite mit Anzahl, Gesamtbetrag, **deutlich hervorgehobener**
@@ -72,7 +72,7 @@ Formular. Impressum wie bei ago-sofi-site.
 
 Tabelle `bestellungen`:
 `id INTEGER PK`, `erstellt_am TEXT (ISO 8601)`, `name TEXT NOT NULL`, `anzahl INTEGER NOT NULL
-CHECK(anzahl BETWEEN 1 AND 20)`, `bemerkung TEXT`, `bezahlt INTEGER NOT NULL DEFAULT 0`,
+CHECK(anzahl BETWEEN 1 AND 25)`, `bemerkung TEXT`, `bezahlt INTEGER NOT NULL DEFAULT 0`,
 `bezahlt_am TEXT`, `notiz_intern TEXT`, `quelle TEXT DEFAULT 'formular'` (`formular`/`manuell`),
 `uebergeben INTEGER NOT NULL DEFAULT 0` (nachträglich ergänzt, `db.php` zieht die Spalte per
 `ALTER TABLE` nach).
