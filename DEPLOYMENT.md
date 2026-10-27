@@ -85,7 +85,8 @@ Verzeichnis und wird dabei nie angefasst.
 ```
 
 Erzeugt auf dem Server per `VACUUM INTO` eine konsistente Kopie der Datenbank und legt sie als
-`~/Desktop/<Zeitstempel>-ago-kalender-backup.sqlite` (Modus 600) ab. Empfehlenswert vor
+`./backups/<Zeitstempel>-ago-kalender-backup.sqlite` (Modus 600) ab. Der Ordner `backups/`
+steht in `.gitignore` und wird nicht mit deployt. Empfehlenswert vor
 Bestellschluss und vor der Weihnachtsfeier. Die Kopien enthalten Namen und müssen zur
 Löschfrist ebenfalls gelöscht werden (siehe unten). Wiederherstellen: Datei per `scp` nach
 `/tmp` kopieren und als `www-data` nach `/var/www/kalender.agorion.de-data/bestellungen.sqlite`
@@ -119,5 +120,5 @@ AGO_KALENDER_JETZT="2026-11-23 08:00" AGO_KALENDER_DB="$PWD/dev-data/bestellunge
 1. Im Admin-Bereich CSV exportieren und, falls der Kassenwart eine Aufstellung braucht, an ihn geben.
 2. „Alle Bestellungen löschen“ (spätestens 31.01.2027). Die Datenbank wird dabei per `VACUUM`
    neu geschrieben, gelöschte Daten bleiben nicht in der Datei zurück.
-3. Lokale CSV-Exporte und Backups (`~/Desktop/*-ago-kalender-backup.sqlite`) auf dem Mac
+3. Lokale CSV-Exporte und Backups (`backups/*-ago-kalender-backup.sqlite`) auf dem Mac
    ebenfalls löschen.

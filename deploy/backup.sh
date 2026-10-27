@@ -11,7 +11,7 @@ set -euo pipefail
 REMOTE_HOST="cerberus@92.205.236.81"
 SSH_KEY="$HOME/.ssh/ago-sofi-deploy"
 REMOTE_DB="/var/www/kalender.agorion.de-data/bestellungen.sqlite"
-ZIEL_DIR="$HOME/Desktop"
+ZIEL_DIR="$(cd "$(dirname "$0")/.." && pwd)/backups"
 
 ZEITSTEMPEL="$(date +%Y-%m-%d_%H%M)"
 ZIEL_DATEI="$ZIEL_DIR/$ZEITSTEMPEL-ago-kalender-backup.sqlite"

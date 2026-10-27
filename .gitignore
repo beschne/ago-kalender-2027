@@ -1,5 +1,6 @@
 .DS_Store
 dev-data/
+backups/
 *.sqlite
 *.sqlite-journal
 *.sqlite-wal
