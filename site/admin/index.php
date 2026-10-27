@@ -7,14 +7,31 @@ require __DIR__ . '/../inc/csrf.php';
 
 $pdo = ago_kalender_db();
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['aktion'] ?? '') === 'bezahlt') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     csrf_verify();
     $id = (int) ($_POST['id'] ?? 0);
-    $bezahlt = ($_POST['bezahlt'] ?? '') === '1';
-    $stmt = $pdo->prepare('UPDATE bestellungen SET bezahlt = ?, bezahlt_am = ? WHERE id = ?');
-    $stmt->execute([$bezahlt ? 1 : 0, $bezahlt ? jetzt()->format('Y-m-d') : null, $id]);
+    $wert = ($_POST['wert'] ?? '') === '1';
+    $aktion = $_POST['aktion'] ?? '';
+    if ($aktion === 'bezahlt') {
+        $stmt = $pdo->prepare('UPDATE bestellungen SET bezahlt = ?, bezahlt_am = ? WHERE id = ?');
+        $stmt->execute([$wert ? 1 : 0, $wert ? jetzt()->format('Y-m-d') : null, $id]);
+    } elseif ($aktion === 'uebergeben') {
+        $stmt = $pdo->prepare('UPDATE bestellungen SET uebergeben = ? WHERE id = ?');
+        $stmt->execute([$wert ? 1 : 0, $id]);
+    }
     header('Location: index.php#b' . $id, true, 303);
     exit;
+}
+
+// Umschalt-Knopf für bezahlt/übergeben (funktioniert ohne JavaScript).
+function umschalter(array $b, string $aktion, string $an, string $aus): string {
+    $istAn = (bool) $b[$aktion];
+    return '<form method="post" action="index.php">' . csrf_field()
+        . '<input type="hidden" name="aktion" value="' . $aktion . '">'
+        . '<input type="hidden" name="id" value="' . (int) $b['id'] . '">'
+        . '<input type="hidden" name="wert" value="' . ($istAn ? '0' : '1') . '">'
+        . '<button type="submit" class="umschalter' . ($istAn ? ' ist-an' : '') . '">'
+        . ($istAn ? '☑ ' . $an : '☐ ' . $aus) . '</button></form>';
 }
 
 csrf_token(); // Session-Cookie muss gesetzt sein, bevor unten HTML-Ausgabe beginnt
@@ -23,10 +40,14 @@ $bestellungen = $pdo->query('SELECT * FROM bestellungen ORDER BY erstellt_am, id
 
 $kalenderBestellt = 0;
 $kalenderBezahlt = 0;
+$kalenderUebergeben = 0;
 foreach ($bestellungen as $b) {
     $kalenderBestellt += $b['anzahl'];
     if ($b['bezahlt']) {
         $kalenderBezahlt += $b['anzahl'];
+    }
+    if ($b['uebergeben']) {
+        $kalenderUebergeben += $b['anzahl'];
     }
 }
 $kalenderOffen = $kalenderBestellt - $kalenderBezahlt;
@@ -46,6 +67,7 @@ $kalenderOffen = $kalenderBestellt - $kalenderBezahlt;
     <div class="admin-header">
         <h1>Astrokalender <?= KALENDER_JAHR ?> – Bestellungen</h1>
         <div class="admin-header-aktionen">
+            <a href="liste.php">Übergabeliste</a>
             <a href="export.php">CSV-Export</a>
             <a href="edit.php" class="btn">+ Bestellung anlegen</a>
         </div>
@@ -73,6 +95,7 @@ $kalenderOffen = $kalenderBestellt - $kalenderBezahlt;
                 <dt>bestellt</dt><dd><?= $kalenderBestellt ?></dd>
                 <dt>bezahlt</dt><dd><?= $kalenderBezahlt ?></dd>
                 <dt>offen</dt><dd><?= $kalenderOffen ?></dd>
+                <dt>übergeben</dt><dd><?= $kalenderUebergeben ?></dd>
             </dl>
         </div>
         <div class="kennzahl">
@@ -107,6 +130,7 @@ $kalenderOffen = $kalenderBestellt - $kalenderBezahlt;
             <th class="zahl">Betrag</th>
             <th>Bemerkung</th>
             <th>Bezahlt</th>
+            <th>Übergeben</th>
             <th>Interne Notiz</th>
             <th></th>
         </tr>
@@ -125,19 +149,12 @@ $kalenderOffen = $kalenderBestellt - $kalenderBezahlt;
                 <td class="zahl nowrap"><?= h(euro($b['anzahl'] * PREIS_CENT)) ?></td>
                 <td><?= nl2br(h($b['bemerkung'])) ?></td>
                 <td class="nowrap">
-                    <form method="post" action="index.php">
-                        <?= csrf_field() ?>
-                        <input type="hidden" name="aktion" value="bezahlt">
-                        <input type="hidden" name="id" value="<?= (int) $b['id'] ?>">
-                        <input type="hidden" name="bezahlt" value="<?= $b['bezahlt'] ? '0' : '1' ?>">
-                        <button type="submit" class="toggle-bezahlt" title="<?= $b['bezahlt'] ? 'Als offen markieren' : 'Als bezahlt markieren' ?>">
-                            <?= $b['bezahlt'] ? '☑ bezahlt' : '☐ offen' ?>
-                        </button>
-                    </form>
+                    <?= umschalter($b, 'bezahlt', 'bezahlt', 'offen') ?>
                     <?php if ($b['bezahlt'] && $b['bezahlt_am']): ?>
                         <span class="hinweis"><?= h(datum_kurz($b['bezahlt_am'])) ?></span>
                     <?php endif; ?>
                 </td>
+                <td class="nowrap"><?= umschalter($b, 'uebergeben', 'übergeben', 'nein') ?></td>
                 <td><?= nl2br(h($b['notiz_intern'])) ?></td>
                 <td class="nowrap aktionen">
                     <a href="edit.php?id=<?= (int) $b['id'] ?>">Bearbeiten</a>
@@ -150,7 +167,7 @@ $kalenderOffen = $kalenderBestellt - $kalenderBezahlt;
             </tr>
         <?php endforeach; ?>
         <?php if (!$bestellungen): ?>
-            <tr><td colspan="8" class="leer">Noch keine Bestellungen.</td></tr>
+            <tr><td colspan="9" class="leer">Noch keine Bestellungen.</td></tr>
         <?php endif; ?>
         </tbody>
     </table>

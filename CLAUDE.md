@@ -73,7 +73,9 @@ Formular. Impressum wie bei ago-sofi-site.
 Tabelle `bestellungen`:
 `id INTEGER PK`, `erstellt_am TEXT (ISO 8601)`, `name TEXT NOT NULL`, `anzahl INTEGER NOT NULL
 CHECK(anzahl BETWEEN 1 AND 20)`, `bemerkung TEXT`, `bezahlt INTEGER NOT NULL DEFAULT 0`,
-`bezahlt_am TEXT`, `notiz_intern TEXT`, `quelle TEXT DEFAULT 'formular'` (`formular`/`manuell`).
+`bezahlt_am TEXT`, `notiz_intern TEXT`, `quelle TEXT DEFAULT 'formular'` (`formular`/`manuell`),
+`uebergeben INTEGER NOT NULL DEFAULT 0` (nachträglich ergänzt, `db.php` zieht die Spalte per
+`ALTER TABLE` nach).
 
 Datei: `/var/www/kalender.agorion.de-data/bestellungen.sqlite`, Verzeichnis gehört `www-data`
 (SQLite braucht Schreibrecht auf das Verzeichnis für Journal-Dateien). Schema wird beim ersten
@@ -121,15 +123,20 @@ Textvorschlag für `/datenschutz`:
 ├── DEPLOYMENT.md
 ├── deploy/
 │   ├── deploy.sh
+│   ├── backup.sh              (DB-Kopie auf den Mac)
+│   ├── traffic.sh             (Zugriffsauswertung, nur lokal, gitignored)
 │   └── nginx/kalender.agorion.de.conf
 └── site/                      ← wird auf den Server deployt
     ├── index.php              (Formular + Bestätigung)
     ├── datenschutz.php
     ├── impressum.php
+    ├── 404.php / 50x.html     (Fehlerseiten)
+    ├── img/                   (Banner, vorschau.svg/png für die Link-Vorschau)
     ├── admin/
     │   ├── index.php          (Übersicht, Kennzahlen, bezahlt-Häkchen)
     │   ├── edit.php
     │   ├── delete.php
+    │   ├── liste.php          (druckbare Übergabeliste)
     │   └── export.php         (CSV)
     ├── inc/
     │   ├── config.php

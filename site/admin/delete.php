@@ -1,5 +1,6 @@
 <?php
 // Löscht eine einzelne Bestellung (id) oder alle Bestellungen (alle=1 mit Bestätigungstext).
+require __DIR__ . '/../inc/helpers.php';
 require __DIR__ . '/../inc/db.php';
 require __DIR__ . '/../inc/csrf.php';
 

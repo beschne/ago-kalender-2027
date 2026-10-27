@@ -3,6 +3,18 @@
 
 require_once __DIR__ . '/config.php';
 
+// Unbehandelte Fehler (z. B. Datenbank nicht erreichbar): ins PHP-Log schreiben und
+// statt einer leeren Seite die statische Störungsseite zeigen.
+set_exception_handler(function (Throwable $fehler): void {
+    error_log('AGO Kalender: ' . $fehler);
+    if (!headers_sent()) {
+        http_response_code(500);
+        header('Content-Type: text/html; charset=UTF-8');
+        header('Cache-Control: no-store');
+    }
+    readfile(__DIR__ . '/../50x.html');
+});
+
 function h(?string $text): string {
     return htmlspecialchars($text ?? '', ENT_QUOTES, 'UTF-8');
 }

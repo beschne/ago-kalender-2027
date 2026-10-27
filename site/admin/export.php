@@ -18,7 +18,7 @@ header('Cache-Control: no-store');
 
 $out = fopen('php://output', 'w');
 fwrite($out, "\xEF\xBB\xBF");
-fputcsv($out, ['Datum', 'Name', 'Anzahl', 'Betrag (EUR)', 'Bemerkung', 'Bezahlt', 'Bezahlt am', 'Interne Notiz', 'Quelle'], ';', '"', '');
+fputcsv($out, ['Datum', 'Name', 'Anzahl', 'Betrag (EUR)', 'Bemerkung', 'Bezahlt', 'Bezahlt am', 'Übergeben', 'Interne Notiz', 'Quelle'], ';', '"', '');
 foreach ($bestellungen as $b) {
     fputcsv($out, [
         datum_kurz($b['erstellt_am'], true),
@@ -28,6 +28,7 @@ foreach ($bestellungen as $b) {
         csv_zelle((string) $b['bemerkung']),
         $b['bezahlt'] ? 'ja' : 'nein',
         datum_kurz($b['bezahlt_am']),
+        $b['uebergeben'] ? 'ja' : 'nein',
         csv_zelle((string) $b['notiz_intern']),
         $b['quelle'],
     ], ';', '"', '');

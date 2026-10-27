@@ -16,6 +16,25 @@ function ago_kalender_nav_class(string $item, string $activeNav): string {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
     <title><?= h($title) ?></title>
+    <?php
+    $vorschauText = bestellung_offen()
+        ? 'Jetzt den Astrokalender ' . KALENDER_JAHR . ' der AG Orion bestellen: '
+            . euro(PREIS_CENT) . ' pro Kalender, Bestellschluss ' . bestellschluss()->format('d.m.Y') . '.'
+        : 'Die Bestellung für den Astrokalender ' . KALENDER_JAHR . ' der AG Orion ist geschlossen.';
+    ?>
+    <meta name="description" content="<?= h($vorschauText) ?>">
+    <!-- Link-Vorschau in WhatsApp, Signal & Co. -->
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="de_DE">
+    <meta property="og:site_name" content="AG Orion">
+    <meta property="og:title" content="Astrokalender <?= KALENDER_JAHR ?> bestellen – AG Orion">
+    <meta property="og:description" content="<?= h($vorschauText) ?>">
+    <meta property="og:url" content="<?= SITE_URL ?>/">
+    <meta property="og:image" content="<?= SITE_URL ?>/img/vorschau.png?v=<?= @filemtime(__DIR__ . '/../img/vorschau.png') ?: '1' ?>">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Astrokalender <?= KALENDER_JAHR ?> der AG Orion">
+    <meta name="twitter:card" content="summary_large_image">
     <link rel="stylesheet" href="/css/style.css?v=<?= @filemtime(__DIR__ . '/../css/style.css') ?: '1' ?>">
     <link rel="icon" href="/favicon.ico" sizes="any">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">

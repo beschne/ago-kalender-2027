@@ -161,7 +161,7 @@ table.admin-tabelle form {
     font-size: 0.75rem;
 }
 
-.toggle-bezahlt {
+.umschalter {
     font: inherit;
     padding: 0.2rem 0.5rem;
     border: 1px solid #bbb;
@@ -170,7 +170,7 @@ table.admin-tabelle form {
     cursor: pointer;
 }
 
-.ist-bezahlt .toggle-bezahlt {
+.umschalter.ist-an {
     border-color: #2c6b23;
     background: #dcf3d8;
     color: #2c6b23;
@@ -274,6 +274,55 @@ table.admin-tabelle form {
 
 .gefahrenzone .admin-form input[type=text] {
     flex: 1 1 200px;
+}
+
+/* Übergabeliste: großzügige Zeilen zum Abhaken, beim Drucken schwarz-weiß ohne Bedienelemente. */
+.uebergabe-tabelle td {
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
+}
+
+.uebergabe-tabelle .kaestchen {
+    width: 5.5rem;
+    text-align: center;
+    font-size: 1.3rem;
+}
+
+.uebergabe-tabelle tfoot th {
+    border-top: 2px solid #222;
+}
+
+@media print {
+    .nicht-drucken {
+        display: none;
+    }
+
+    body.druckliste {
+        background: #fff;
+        font-size: 11pt;
+    }
+
+    .druckliste .admin-wrap {
+        max-width: none;
+        padding: 0;
+    }
+
+    .druckliste table.admin-tabelle th {
+        background: none;
+        border-bottom: 2px solid #222;
+    }
+
+    .druckliste table.admin-tabelle td {
+        border-bottom: 1px solid #999;
+    }
+
+    .druckliste tr {
+        break-inside: avoid;
+    }
+
+    .druckliste thead {
+        display: table-header-group;
+    }
 }
 
 .fehler {

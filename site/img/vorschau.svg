@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <!-- Quelle für vorschau.png (Link-Vorschau in WhatsApp, Signal & Co., 1200 x 630).
+       Jahr, Preis und Bestellschluss sind hier fest eingetragen und für 2028 anzupassen.
+       Erzeugen mit: rsvg-convert -w 1200 -h 630 site/img/vorschau.svg -o site/img/vorschau.png -->
+  <defs>
+    <linearGradient id="himmel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1d2858"/>
+      <stop offset="100%" stop-color="#0b0f24"/>
+    </linearGradient>
+    <linearGradient id="blatt" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#e6e9ef"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#himmel)"/>
+
+  <!-- Hintergrundsterne -->
+  <g fill="#fff">
+    <circle cx="60" cy="70" r="2.5" opacity="0.9"/>
+    <circle cx="420" cy="40" r="2" opacity="0.6"/>
+    <circle cx="530" cy="560" r="2" opacity="0.6"/>
+    <circle cx="1130" cy="60" r="3" opacity="0.8"/>
+    <circle cx="1010" cy="140" r="1.8" opacity="0.5"/>
+    <circle cx="1150" cy="560" r="2.5" opacity="0.7"/>
+    <circle cx="700" cy="590" r="1.8" opacity="0.5"/>
+    <circle cx="80" cy="560" r="2" opacity="0.6"/>
+    <circle cx="880" cy="30" r="1.8" opacity="0.6"/>
+    <circle cx="460" cy="300" r="1.5" opacity="0.4"/>
+  </g>
+
+  <!-- Kalender (wie apple-touch-icon.svg, Faktor 2.6, Mittelpunkt bei x=250) -->
+  <g transform="translate(16 81) scale(2.6)">
+    <rect x="36" y="44" width="108" height="110" rx="11" fill="#000" opacity="0.35" transform="translate(0 4)"/>
+    <rect x="36" y="44" width="108" height="110" rx="11" fill="url(#blatt)"/>
+    <path d="M36 55 a11 11 0 0 1 11 -11 h86 a11 11 0 0 1 11 11 v19 h-108 z" fill="#1982d1"/>
+    <text x="90" y="67" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif"
+          font-size="17" font-weight="700" fill="#fff" letter-spacing="1">2027</text>
+    <rect x="56" y="32" width="9" height="24" rx="4.5" fill="#d5d9e2" stroke="#0b0f24" stroke-width="2"/>
+    <rect x="115" y="32" width="9" height="24" rx="4.5" fill="#d5d9e2" stroke="#0b0f24" stroke-width="2"/>
+    <polygon points="90.0,83.0 96.5,101.1 115.7,101.7 100.5,113.4 105.9,131.8 90.0,121.0 74.1,131.8 79.5,113.4 64.3,101.7 83.5,101.1"
+             fill="#f4c430" stroke="#d9a514" stroke-width="1.5" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Text -->
+  <g font-family="Helvetica Neue, Helvetica, Arial, sans-serif" fill="#fff">
+    <text x="540" y="200" font-size="34" font-weight="400" fill="#9fb3e0" letter-spacing="2">AG ORION BAD HOMBURG</text>
+    <text x="540" y="290" font-size="80" font-weight="700">Astrokalender</text>
+    <text x="540" y="380" font-size="80" font-weight="700" fill="#f4c430">2027</text>
+    <text x="540" y="460" font-size="34" font-weight="400">Jetzt bestellen · 10,00 € pro Kalender</text>
+    <text x="540" y="510" font-size="34" font-weight="400" fill="#9fb3e0">Bestellschluss: 22.11.2026</text>
+  </g>
+</svg>

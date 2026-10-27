@@ -16,5 +16,6 @@ Live: https://kalender.agorion.de
 | `/datenschutz` | Datenschutzhinweis nach Art. 13 DSGVO |
 | `/impressum` | Impressum |
 | `/admin/` | Bestellungen, Kennzahlen, Druckmenge, CSV-Export (Basic Auth) |
+| `/admin/liste.php` | Druckbare Übergabeliste für die Weihnachtsfeier |
 
 Lokal starten und deployen: siehe [DEPLOYMENT.md](DEPLOYMENT.md).

@@ -33,9 +33,16 @@ function ago_kalender_db(): PDO {
             bezahlt INTEGER NOT NULL DEFAULT 0,
             bezahlt_am TEXT,
             notiz_intern TEXT,
-            quelle TEXT DEFAULT 'formular'
+            quelle TEXT DEFAULT 'formular',
+            uebergeben INTEGER NOT NULL DEFAULT 0
         )
         SQL);
+
+    // Spalten, die nach dem Start ergänzt wurden, in bestehenden Datenbanken nachziehen.
+    $spalten = array_column($pdo->query('PRAGMA table_info(bestellungen)')->fetchAll(), 'name');
+    if (!in_array('uebergeben', $spalten, true)) {
+        $pdo->exec('ALTER TABLE bestellungen ADD COLUMN uebergeben INTEGER NOT NULL DEFAULT 0');
+    }
 
     return $pdo;
 }

@@ -4,6 +4,8 @@
 date_default_timezone_set('Europe/Berlin');
 
 const KALENDER_JAHR = 2027;
+// Absolute Adresse, nötig für die Link-Vorschau (Open Graph).
+const SITE_URL = 'https://kalender.agorion.de';
 const KALENDER_FORMAT = 'Wandkalender 30 x 45 cm (A3 hoch), Premium-Papier matt, 13 Blätter';
 
 // Preis in Cent, damit nicht mit Gleitkommazahlen gerechnet wird.

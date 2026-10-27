@@ -9,7 +9,7 @@ $id = (int) ($_GET['id'] ?? $_POST['id'] ?? 0);
 
 $bestellung = [
     'name' => '', 'anzahl' => 1, 'bemerkung' => '', 'bezahlt' => 0, 'bezahlt_am' => '',
-    'notiz_intern' => '', 'erstellt_am' => null, 'quelle' => 'manuell',
+    'notiz_intern' => '', 'erstellt_am' => null, 'quelle' => 'manuell', 'uebergeben' => 0,
 ];
 if ($id) {
     $stmt = $pdo->prepare('SELECT * FROM bestellungen WHERE id = ?');
@@ -38,17 +38,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $bezahltAm = '';
     }
     $notiz = trim((string) ($_POST['notiz_intern'] ?? ''));
+    $uebergeben = !empty($_POST['uebergeben']);
 
     if (!$fehler) {
         $werte = [$daten['name'], $daten['anzahl'], $daten['bemerkung'], $bezahlt ? 1 : 0,
-            $bezahltAm === '' ? null : $bezahltAm, $notiz === '' ? null : $notiz];
+            $bezahltAm === '' ? null : $bezahltAm, $notiz === '' ? null : $notiz, $uebergeben ? 1 : 0];
         if ($id) {
             $stmt = $pdo->prepare('UPDATE bestellungen SET name = ?, anzahl = ?, bemerkung = ?, bezahlt = ?,
-                bezahlt_am = ?, notiz_intern = ? WHERE id = ?');
+                bezahlt_am = ?, notiz_intern = ?, uebergeben = ? WHERE id = ?');
             $stmt->execute([...$werte, $id]);
         } else {
             $stmt = $pdo->prepare("INSERT INTO bestellungen (name, anzahl, bemerkung, bezahlt, bezahlt_am,
-                notiz_intern, erstellt_am, quelle) VALUES (?, ?, ?, ?, ?, ?, ?, 'manuell')");
+                notiz_intern, uebergeben, erstellt_am, quelle) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'manuell')");
             $stmt->execute([...$werte, jetzt()->format('c')]);
             $id = (int) $pdo->lastInsertId();
         }
@@ -64,6 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'bezahlt' => $bezahlt ? 1 : 0,
         'bezahlt_am' => $bezahltAm,
         'notiz_intern' => $notiz,
+        'uebergeben' => $uebergeben ? 1 : 0,
     ]);
 }
 
@@ -124,6 +126,11 @@ $ueberschrift = $id ? 'Bestellung bearbeiten' : 'Bestellung anlegen';
         <label for="bezahlt_am">bezahlt am</label>
         <input type="date" id="bezahlt_am" name="bezahlt_am" value="<?= h($bestellung['bezahlt_am']) ?>">
         <p class="hinweis">Leer lassen = heute, sobald „bezahlt“ angehakt ist.</p>
+
+        <label class="checkbox">
+            <input type="checkbox" name="uebergeben" value="1"<?= $bestellung['uebergeben'] ? ' checked' : '' ?>>
+            übergeben
+        </label>
 
         <label for="notiz_intern">Interne Notiz</label>
         <textarea id="notiz_intern" name="notiz_intern"><?= h($bestellung['notiz_intern']) ?></textarea>

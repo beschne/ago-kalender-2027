@@ -6,3 +6,10 @@ document.addEventListener('submit', function (event) {
         event.preventDefault();
     }
 });
+
+// Druck-Knopf der Übergabeliste.
+document.addEventListener('click', function (event) {
+    if (event.target.closest('[data-drucken]')) {
+        window.print();
+    }
+});
