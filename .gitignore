@@ -5,3 +5,4 @@ dev-data/
 *.sqlite-wal
 *.sqlite-shm
 *.csv
+deploy/traffic.sh
