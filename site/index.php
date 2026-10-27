@@ -99,6 +99,9 @@ require __DIR__ . '/inc/header.php';
                 Die Kalender bekommst du <?= h(UEBERGABE) ?>. Möchtest du etwas ändern oder
                 stornieren, schreib <?= h(KONTAKT_NAME) ?> einfach per Signal oder PN.
             </p>
+    <?php if (ZAEHLER_ANZEIGEN): ?>
+            <p class="zaehler"><?= zaehler_satz($bestellt) ?></p>
+    <?php endif; ?>
             <p><a href="/">Noch eine Bestellung aufgeben</a></p>
 
 <?php else: ?>
@@ -125,8 +128,8 @@ require __DIR__ . '/inc/header.php';
                 Ein eventueller Überschuss geht als Spende an den Verein.
             </p>
 
-    <?php if (ZAEHLER_ANZEIGEN && $bestellt > 0): ?>
-            <p class="zaehler">Bisher wurden <strong><?= $bestellt ?> Kalender</strong> bestellt.</p>
+    <?php if (ZAEHLER_ANZEIGEN): ?>
+            <p class="zaehler"><?= zaehler_satz($bestellt) ?></p>
     <?php endif; ?>
 
     <?php if (!$offen): ?>

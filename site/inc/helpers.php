@@ -41,6 +41,15 @@ function datum_kurz(?string $iso, bool $mitZeit = false): string {
     return (new DateTimeImmutable($iso))->format($mitZeit ? 'd.m.Y H:i' : 'd.m.Y');
 }
 
+// Öffentlicher Zähler (HTML), z. B. "Bisher wurden <strong>12 Kalender</strong> bestellt."
+function zaehler_satz(int $bestellt): string {
+    if ($bestellt === 0) {
+        return 'Bisher wurde noch kein Kalender bestellt.';
+    }
+    $verb = $bestellt === 1 ? 'wurde' : 'wurden';
+    return "Bisher {$verb} <strong>{$bestellt} Kalender</strong> bestellt.";
+}
+
 function verwendungszweck(string $name): string {
     return VERWENDUNGSZWECK_PRAEFIX . $name;
 }
