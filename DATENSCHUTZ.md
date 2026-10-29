@@ -84,7 +84,10 @@ Der Textvorschlag steht in `CLAUDE.md`.
   Ausgabe-Escaping
 * Kein Tracking, keine Analyse-Tools, keine externen Ressourcen (Schriften,
   Skripte, CDNs), nur ein technisch notwendiges Session-Cookie
-* nginx-Access-Log der Seite mit anonymisierten IP-Adressen oder abgeschaltet
+* nginx-Access-Log der Seite (HTTPS und HTTP) mit anonymisierten IP-Adressen; das
+  Error-Log enthält volle IP-Adressen (Fehler, Angriffsversuche, fail2ban), Löschung nach
+  14 Tagen per logrotate
+* Rate-Limits in nginx für Bestellungen und Admin-Bereich
 * `X-Robots-Tag: noindex`, damit die Seite nicht in Suchmaschinen erscheint
 
 ## Hosting und Auftragsverarbeitung (Art. 28)

@@ -7,6 +7,7 @@
 # Datenschutz: Die Kopie enthält Namen. Alle Backups spätestens zur Löschfrist
 # (31.01.2027) ebenfalls löschen, siehe DEPLOYMENT.md.
 set -euo pipefail
+umask 077   # Backup ist von Anfang an nur für den eigenen Benutzer lesbar
 
 REMOTE_HOST="cerberus@92.205.236.81"
 SSH_KEY="$HOME/.ssh/ago-sofi-deploy"

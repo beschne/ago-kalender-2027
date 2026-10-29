@@ -1,6 +1,7 @@
 <?php
 // Übersicht aller Bestellungen mit Kennzahlen und Bezahlt-Umschalter.
 // Zugriff nur über nginx auth_basic, siehe deploy/nginx/kalender.agorion.de.conf.
+require __DIR__ . '/../inc/admin.php';
 require __DIR__ . '/../inc/helpers.php';
 require __DIR__ . '/../inc/db.php';
 require __DIR__ . '/../inc/csrf.php';

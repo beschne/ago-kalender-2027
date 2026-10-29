@@ -14,7 +14,7 @@ SSH_KEY="$HOME/.ssh/ago-sofi-deploy"
 
 rsync -avz --delete \
     -e "ssh -i $SSH_KEY -o IdentitiesOnly=yes" \
-    --exclude ".DS_Store" \
+    --exclude ".*" \
     --exclude "*.sqlite*" \
     "$SITE_DIR/" "$REMOTE_HOST:$REMOTE_PATH"
 

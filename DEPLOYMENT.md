@@ -42,10 +42,11 @@ ssh cerberus@92.205.236.81 'sudo mv /tmp/kalender.agorion.de.conf /etc/nginx/sit
 ```
 
 Das Access-Log der Seite (`/var/log/nginx/kalender.agorion.de-access.log`) speichert IP-Adressen
-nur gekürzt (`map`/`log_format` in der Konfiguration). Das **globale** nginx-Log
-(`/var/log/nginx/access.log`) protokolliert weiterhin volle IP-Adressen aller Seiten auf dem
-Server; soll das für diese Seite nicht passieren, muss das globale `access_log` in
-`nginx.conf` angepasst werden (betrifft alle Seiten, daher bewusst nicht automatisch).
+nur gekürzt (`map`/`log_format` in der Konfiguration). Beide `server`-Blöcke (HTTPS und der
+Redirect auf Port 80) setzen ein eigenes `access_log` und heben damit das globale
+`/var/log/nginx/access.log` mit voller IP für diese Seite auf. Das globale
+`/var/log/nginx/error.log` enthält bei Fehlern volle IP-Adressen (gewollt, fail2ban liest es);
+logrotate löscht es nach 14 Tagen.
 
 ### 4. TLS-Zertifikat
 
@@ -62,12 +63,16 @@ ssh cerberus@92.205.236.81 'cat /etc/nginx/sites-available/kalender.agorion.de' 
 
 ### 5. Admin-Zugang (HTTP Basic Auth)
 
+Passwort mit bcrypt (`-B`), interaktiv abgefragt, damit es nicht in der Shell-History landet
+(`htpasswd` stammt aus `apache2-utils`):
+
 ```bash
-ssh cerberus@92.205.236.81 'HASH=$(openssl passwd -apr1 "<passwort>"); echo "benno:$HASH" | sudo tee /etc/nginx/.htpasswd-kalender-admin > /dev/null && sudo chmod 640 /etc/nginx/.htpasswd-kalender-admin && sudo chown root:www-data /etc/nginx/.htpasswd-kalender-admin'
+ssh -t cerberus@92.205.236.81 'sudo htpasswd -B -C 12 /etc/nginx/.htpasswd-kalender-admin benno && sudo chmod 640 /etc/nginx/.htpasswd-kalender-admin && sudo chown root:www-data /etc/nginx/.htpasswd-kalender-admin'
 ```
 
-Weitere Personen als zusätzliche Zeilen `name:hash` eintragen. Die Datei liegt außerhalb des
-Webroots und ist nicht Teil des Deploys.
+Beim allerersten Anlegen zusätzlich `-c`. Weitere Personen mit demselben Befehl und anderem
+Namen eintragen. Die Datei liegt außerhalb des Webroots und ist nicht Teil des Deploys.
+Fehlgeschlagene Anmeldungen sperrt fail2ban über das Jail `nginx-http-auth`.
 
 ### 6. Upload-Link (optional)
 

@@ -40,9 +40,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $offen) {
     }
 
     $eingabe = [
-        'name' => (string) ($_POST['name'] ?? ''),
-        'anzahl' => (string) ($_POST['anzahl'] ?? ''),
-        'bemerkung' => (string) ($_POST['bemerkung'] ?? ''),
+        'name' => eingabe_text($_POST['name'] ?? ''),
+        'anzahl' => eingabe_text($_POST['anzahl'] ?? ''),
+        'bemerkung' => eingabe_text($_POST['bemerkung'] ?? '', true),
         'datenschutz' => !empty($_POST['datenschutz']),
     ];
 }

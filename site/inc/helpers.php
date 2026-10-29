@@ -16,7 +16,7 @@ set_exception_handler(function (Throwable $fehler): void {
 });
 
 function h(?string $text): string {
-    return htmlspecialchars($text ?? '', ENT_QUOTES, 'UTF-8');
+    return htmlspecialchars($text ?? '', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
 
 // Betrag in Cent als "10,00 €" (geschütztes Leerzeichen vor dem Euro-Zeichen).
@@ -50,7 +50,29 @@ function datum_kurz(?string $iso, bool $mitZeit = false): string {
     if ($iso === null || $iso === '') {
         return '';
     }
-    return (new DateTimeImmutable($iso))->format($mitZeit ? 'd.m.Y H:i' : 'd.m.Y');
+    try {
+        return (new DateTimeImmutable($iso))->format($mitZeit ? 'd.m.Y H:i' : 'd.m.Y');
+    } catch (Exception) {
+        // Ungültiger Wert in der Datenbank: lieber roh anzeigen als die ganze Seite abbrechen.
+        return $iso;
+    }
+}
+
+// Datum "JJJJ-MM-TT" aus einem Formularfeld; null, wenn es das Datum nicht gibt (z. B. 31.02.).
+function eingabe_datum(string $wert): ?string {
+    $datum = DateTimeImmutable::createFromFormat('!Y-m-d', $wert);
+    return $datum && $datum->format('Y-m-d') === $wert ? $wert : null;
+}
+
+// Text aus einem Formularfeld. Nicht-Strings (z. B. name[]=…) und ungültiges UTF-8 werden zu '',
+// Steuer- und Formatzeichen entfernt, etwa der Richtungswechsel U+202E, mit dem sich Namen in
+// der Admin-Liste optisch fälschen ließen. Einzeilig: Leerraum zu einem Leerzeichen zusammengefasst.
+function eingabe_text(mixed $wert, bool $mehrzeilig = false): string {
+    if (!is_string($wert) || !mb_check_encoding($wert, 'UTF-8')) {
+        return '';
+    }
+    $wert = $mehrzeilig ? str_replace("\r\n", "\n", $wert) : preg_replace('/\s+/u', ' ', $wert);
+    return trim(preg_replace('/(?!\n)[\p{Cc}\p{Cf}]/u', '', $wert));
 }
 
 // Öffentlicher Zähler (HTML), z. B. "Bisher wurden <strong>12 Kalender</strong> bestellt."
@@ -71,7 +93,7 @@ function verwendungszweck(string $name): string {
 function bestellung_validieren(array $eingabe): array {
     $fehler = [];
 
-    $name = trim(preg_replace('/\s+/u', ' ', (string) ($eingabe['name'] ?? '')));
+    $name = eingabe_text($eingabe['name'] ?? '');
     if ($name === '') {
         $fehler[] = 'Bitte gib deinen Namen an.';
     } elseif (mb_strlen($name) > NAME_MAX) {
@@ -85,7 +107,7 @@ function bestellung_validieren(array $eingabe): array {
         $fehler[] = 'Bitte gib als Anzahl eine ganze Zahl von 1 bis ' . ANZAHL_MAX . ' an.';
     }
 
-    $bemerkung = trim((string) ($eingabe['bemerkung'] ?? ''));
+    $bemerkung = eingabe_text($eingabe['bemerkung'] ?? '', true);
     if (mb_strlen($bemerkung) > BEMERKUNG_MAX) {
         $fehler[] = 'Die Bemerkung darf höchstens ' . BEMERKUNG_MAX . ' Zeichen lang sein.';
     }

@@ -1,6 +1,7 @@
 <?php
 // CSV-Export aller Bestellungen: UTF-8 mit BOM und Semikolon, damit Excel und Numbers
 // die Datei direkt korrekt öffnen.
+require __DIR__ . '/../inc/admin.php';
 require __DIR__ . '/../inc/helpers.php';
 require __DIR__ . '/../inc/db.php';
 

@@ -1,5 +1,6 @@
 <?php
 // Bestellung manuell anlegen (ohne id) oder bearbeiten (mit id).
+require __DIR__ . '/../inc/admin.php';
 require __DIR__ . '/../inc/helpers.php';
 require __DIR__ . '/../inc/db.php';
 require __DIR__ . '/../inc/csrf.php';
@@ -27,8 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     [$daten, $fehler] = bestellung_validieren($_POST);
 
     $bezahlt = !empty($_POST['bezahlt']);
-    $bezahltAm = trim((string) ($_POST['bezahlt_am'] ?? ''));
-    if ($bezahltAm !== '' && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $bezahltAm)) {
+    $bezahltAm = eingabe_text($_POST['bezahlt_am'] ?? '');
+    if ($bezahltAm !== '' && eingabe_datum($bezahltAm) === null) {
         $fehler[] = 'Ungültiges Datum bei „bezahlt am“.';
     }
     if ($bezahlt && $bezahltAm === '') {
@@ -37,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$bezahlt) {
         $bezahltAm = '';
     }
-    $notiz = trim((string) ($_POST['notiz_intern'] ?? ''));
+    $notiz = eingabe_text($_POST['notiz_intern'] ?? '', true);
     $uebergeben = !empty($_POST['uebergeben']);
 
     if (!$fehler) {
@@ -59,9 +60,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Eingaben bei Fehlern erhalten
     $bestellung = array_merge($bestellung, [
-        'name' => (string) ($_POST['name'] ?? ''),
-        'anzahl' => (string) ($_POST['anzahl'] ?? ''),
-        'bemerkung' => (string) ($_POST['bemerkung'] ?? ''),
+        'name' => eingabe_text($_POST['name'] ?? ''),
+        'anzahl' => eingabe_text($_POST['anzahl'] ?? ''),
+        'bemerkung' => eingabe_text($_POST['bemerkung'] ?? '', true),
         'bezahlt' => $bezahlt ? 1 : 0,
         'bezahlt_am' => $bezahltAm,
         'notiz_intern' => $notiz,

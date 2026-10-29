@@ -6,10 +6,15 @@ function session_starten(): void {
     if (session_status() === PHP_SESSION_ACTIVE) {
         return;
     }
+    $https = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
+    // Keine vom Browser vorgegebenen Session-IDs annehmen (Session Fixation). Das Präfix
+    // __Host- verhindert zusätzlich, dass andere agorion.de-Subdomains das Cookie setzen.
+    ini_set('session.use_strict_mode', '1');
+    session_name($https ? '__Host-kalender' : 'kalender');
     session_set_cookie_params([
         'lifetime' => 0,
         'path' => '/',
-        'secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+        'secure' => $https,
         'httponly' => true,
         'samesite' => 'Lax',
     ]);

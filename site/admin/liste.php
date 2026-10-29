@@ -1,6 +1,7 @@
 <?php
 // Druckbare Übergabeliste für die Weihnachtsfeier: alphabetisch, mit offenem Betrag
 // und Kästchen zum Abhaken von Hand.
+require __DIR__ . '/../inc/admin.php';
 require __DIR__ . '/../inc/helpers.php';
 require __DIR__ . '/../inc/db.php';
 

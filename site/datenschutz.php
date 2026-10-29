@@ -33,7 +33,10 @@ require __DIR__ . '/inc/header.php';
                 Missbrauch schützt und beim Schließen des Browsers verfällt. Es gibt kein Tracking,
                 keine Analyse-Tools und keine Inhalte von anderen Anbietern; Schriften und Bilder
                 kommen von unserem eigenen Server. Der Webserver protokolliert Aufrufe nur mit
-                gekürzter, nicht mehr zuordenbarer IP-Adresse.
+                gekürzter, nicht mehr zuordenbarer IP-Adresse. Nur bei Fehlern und abgewehrten
+                Angriffsversuchen speichert er die vollständige IP-Adresse im Fehlerprotokoll; es
+                wird nach 14 Tagen automatisch gelöscht (berechtigtes Interesse an der Sicherheit
+                der Seite, Art. 6 Abs. 1 lit. f DSGVO).
             </p>
 <?php if (UPLOAD_URL !== ''): ?>
             <p>
