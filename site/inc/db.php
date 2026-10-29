@@ -1,7 +1,7 @@
 <?php
 // PDO-Verbindung zur SQLite-Datenbank mit den Bestellungen.
 // Die Datei liegt bewusst außerhalb des Webroots und außerhalb des Git-Repos; das
-// Verzeichnis muss www-data gehören, weil SQLite dort Journal-Dateien anlegt.
+// Verzeichnis muss dem PHP-Benutzer (kalender) gehören, weil SQLite dort Journal-Dateien anlegt.
 
 // Lokale Entwicklung kann den Pfad per Umgebungsvariable überschreiben.
 function ago_kalender_db_pfad(): string {

@@ -21,9 +21,9 @@ mkdir -p "$ZIEL_DIR"
 echo "Datenbank sichern..."
 ssh -i "$SSH_KEY" -o IdentitiesOnly=yes "$REMOTE_HOST" "
     set -e
-    KOPIE=\$(sudo -u www-data mktemp /tmp/ago-kalender-backup.XXXXXX)
-    sudo -u www-data rm -f \"\$KOPIE\"
-    sudo -u www-data php -r '(new PDO(\"sqlite:$REMOTE_DB\"))->exec(\"VACUUM INTO \" . var_export(\$argv[1], true));' \"\$KOPIE\"
+    KOPIE=\$(sudo -u kalender mktemp /tmp/ago-kalender-backup.XXXXXX)
+    sudo -u kalender rm -f \"\$KOPIE\"
+    sudo -u kalender php -r '(new PDO(\"sqlite:$REMOTE_DB\"))->exec(\"VACUUM INTO \" . var_export(\$argv[1], true));' \"\$KOPIE\"
     sudo cat \"\$KOPIE\"
     sudo rm -f \"\$KOPIE\"
 " > "$ZIEL_DATEI"

@@ -21,7 +21,8 @@ Muster von dort übernehmen statt neu erfinden.
 * PHP 8.2 (Server-Templating, kein Framework, kein Build-Schritt, Dateien werden 1:1 deployt)
 * **SQLite** über PDO (eine Datei außerhalb des Webroots, kein MariaDB-User nötig)
 * CSS ohne Präprozessor, Vanilla JavaScript nur wo nötig
-* nginx + PHP-FPM (`unix:/run/php/php8.2-fpm.sock`), TLS per Certbot
+* nginx + PHP-FPM im eigenen Pool als Benutzer `kalender` (`unix:/run/php/php8.2-fpm-kalender.sock`,
+  `deploy/php/kalender.conf`), TLS per Certbot
 * Server, SSH-User und Deploy-Weg wie bei ago-sofi-site (rsync vom Mac, kein Git auf dem Server)
 
 ## Fachliche Eckdaten
@@ -77,7 +78,7 @@ CHECK(anzahl BETWEEN 1 AND 25)`, `bemerkung TEXT`, `bezahlt INTEGER NOT NULL DEF
 `uebergeben INTEGER NOT NULL DEFAULT 0` (nachträglich ergänzt, `db.php` zieht die Spalte per
 `ALTER TABLE` nach).
 
-Datei: `/var/www/kalender.agorion.de-data/bestellungen.sqlite`, Verzeichnis gehört `www-data`
+Datei: `/var/www/kalender.agorion.de-data/bestellungen.sqlite`, Verzeichnis gehört `kalender`
 (SQLite braucht Schreibrecht auf das Verzeichnis für Journal-Dateien). Schema wird beim ersten
 Zugriff automatisch angelegt (`CREATE TABLE IF NOT EXISTS`). Pfad per Umgebungsvariable für die
 lokale Entwicklung überschreibbar, analog zu `ago_sofi_db()`.
@@ -125,7 +126,8 @@ Textvorschlag für `/datenschutz`:
 │   ├── deploy.sh
 │   ├── backup.sh              (DB-Kopie auf den Mac)
 │   ├── traffic.sh             (Zugriffsauswertung, nur lokal, gitignored)
-│   └── nginx/kalender.agorion.de.conf
+│   ├── nginx/kalender.agorion.de.conf
+│   └── php/kalender.conf      (eigener PHP-FPM-Pool, Benutzer kalender)
 └── site/                      ← wird auf den Server deployt
     ├── index.php              (Formular + Bestätigung)
     ├── datenschutz.php

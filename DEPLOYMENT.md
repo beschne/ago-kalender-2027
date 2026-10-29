@@ -8,18 +8,28 @@ liegt kein Git-Checkout, nur der Inhalt von `site/` unter `/var/www/kalender.ago
 * Webroot: `/var/www/kalender.agorion.de` (entspricht 1:1 `site/`)
 * Datenbank: `/var/www/kalender.agorion.de-data/bestellungen.sqlite` (außerhalb des Webroots)
 
-## Einmalige Einrichtung (Schritte 1–4 erledigt am 27.10.2026)
+## Einmalige Einrichtung (Schritte 1–4 erledigt am 27.10.2026, eigener PHP-Pool seit 29.10.2026)
 
-### 1. Verzeichnisse
+### 1. Benutzer, Verzeichnisse und PHP-Pool
+
+PHP läuft für diese Seite in einem eigenen FPM-Pool als Benutzer `kalender`, nicht als
+`www-data`. So können die anderen Seiten auf dem Server (u. a. WordPress) die Bestelldaten
+weder lesen noch ändern. Die Pool-Datei liegt im Repo unter
+[`deploy/php/kalender.conf`](deploy/php/kalender.conf) und entspricht 1:1
+`/etc/php/8.2/fpm/pool.d/kalender.conf`.
 
 ```bash
+ssh cerberus@92.205.236.81 'sudo useradd --system --user-group --no-create-home --home-dir /nonexistent --shell /usr/sbin/nologin kalender'
 ssh cerberus@92.205.236.81 'sudo mkdir -p /var/www/kalender.agorion.de && sudo chown cerberus:cerberus /var/www/kalender.agorion.de && sudo chmod 755 /var/www/kalender.agorion.de'
-ssh cerberus@92.205.236.81 'sudo mkdir -p /var/www/kalender.agorion.de-data && sudo chown www-data:www-data /var/www/kalender.agorion.de-data && sudo chmod 750 /var/www/kalender.agorion.de-data'
+ssh cerberus@92.205.236.81 'sudo install -d -o kalender -g kalender -m 750 /var/www/kalender.agorion.de-data && sudo install -d -o kalender -g kalender -m 700 /var/lib/php/sessions-kalender'
+scp deploy/php/kalender.conf cerberus@92.205.236.81:/tmp/
+ssh cerberus@92.205.236.81 'sudo install -o root -g root -m 644 /tmp/kalender.conf /etc/php/8.2/fpm/pool.d/kalender.conf && rm /tmp/kalender.conf && sudo php-fpm8.2 -t && sudo systemctl reload php8.2-fpm'
 ```
 
-Das Datenverzeichnis gehört `www-data`, weil PHP-FPM als `www-data` läuft und SQLite
-neben der Datenbank Journal-Dateien anlegt. Die Datenbank und die Tabelle entstehen beim
-ersten Seitenaufruf automatisch (`CREATE TABLE IF NOT EXISTS` in `site/inc/db.php`).
+Der Webroot gehört `cerberus` (Deploy) und ist für PHP nur lesbar. Das Datenverzeichnis gehört
+`kalender`, weil SQLite neben der Datenbank Journal-Dateien anlegt. Die Datenbank und die
+Tabelle entstehen beim ersten Seitenaufruf automatisch (`CREATE TABLE IF NOT EXISTS` in
+`site/inc/db.php`).
 
 Voraussetzung: `php8.2-sqlite3` ist installiert. Prüfen mit
 `ssh cerberus@92.205.236.81 'php8.2 -m | grep -i sqlite'`, sonst
@@ -80,7 +90,7 @@ Der Link zur HiDrive-Freigabe für Bilder erscheint nur im Admin-Bereich und wir
 Textdatei neben der Datenbank gelesen, damit er nicht im öffentlichen Repo steht:
 
 ```bash
-ssh -i ~/.ssh/ago-sofi-deploy cerberus@92.205.236.81 'echo "https://my.hidrive.com/share/<id>" | sudo -u www-data tee /var/www/kalender.agorion.de-data/upload-url.txt > /dev/null'
+ssh -i ~/.ssh/ago-sofi-deploy cerberus@92.205.236.81 'echo "https://my.hidrive.com/share/<id>" | sudo -u kalender tee /var/www/kalender.agorion.de-data/upload-url.txt > /dev/null'
 ```
 
 Leeren oder löschen blendet den Link aus. Lokal: `dev-data/upload-url.txt`.
@@ -105,7 +115,7 @@ Erzeugt auf dem Server per `VACUUM INTO` eine konsistente Kopie der Datenbank un
 steht in `.gitignore` und wird nicht mit deployt. Empfehlenswert vor
 Bestellschluss und vor der Weihnachtsfeier. Die Kopien enthalten Namen und müssen zur
 Löschfrist ebenfalls gelöscht werden (siehe unten). Wiederherstellen: Datei per `scp` nach
-`/tmp` kopieren und als `www-data` nach `/var/www/kalender.agorion.de-data/bestellungen.sqlite`
+`/tmp` kopieren und als `kalender` nach `/var/www/kalender.agorion.de-data/bestellungen.sqlite`
 verschieben.
 
 ## Fehlerseiten
