@@ -35,6 +35,15 @@ require __DIR__ . '/inc/header.php';
                 kommen von unserem eigenen Server. Der Webserver protokolliert Aufrufe nur mit
                 gekürzter, nicht mehr zuordenbarer IP-Adresse.
             </p>
+<?php if (UPLOAD_URL !== ''): ?>
+            <p>
+                Ausnahme ist der Menüpunkt „Bilder hochladen“: Er führt zu einer Freigabe bei HiDrive,
+                einem Cloud-Speicher der STRATO AG mit Rechenzentren in Deutschland. Wenn du dort Bilder
+                hochlädst, gelten zusätzlich die
+                <a href="https://www.strato.de/datenschutz/">Datenschutzbestimmungen von STRATO</a>.
+                Das Hochladen ist freiwillig und hat mit deiner Bestellung nichts zu tun.
+            </p>
+<?php endif; ?>
 
             <h2>Deine Rechte</h2>
             <p>

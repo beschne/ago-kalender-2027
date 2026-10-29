@@ -38,5 +38,8 @@ const KONTO_BIC = 'HELADEF1TSK';
 // Bindestrich statt Gedankenstrich: SEPA erlaubt nur einen eingeschränkten Zeichensatz.
 const VERWENDUNGSZWECK_PRAEFIX = 'Astrokalender 2027 - ';
 
+// Upload-Seite für Bilder (HiDrive-Freigabe), erscheint in der Navigation. Leer = ausgeblendet.
+const UPLOAD_URL = '';
+
 const KONTAKT_NAME = 'Benno Schneider';
 const KONTAKT_EMAIL = 'benno.schneider@agorion.de';

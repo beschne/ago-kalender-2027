@@ -58,6 +58,9 @@ function ago_kalender_nav_class(string $item, string $activeNav): string {
                 <div>
                     <ul>
                         <li><a href="/"<?= ago_kalender_nav_class('bestellen', $activeNav) ?>>Kalender bestellen</a></li>
+                        <?php if (UPLOAD_URL !== ''): ?>
+                        <li><a href="<?= h(UPLOAD_URL) ?>" target="_blank" rel="noopener noreferrer">Bilder hochladen<svg class="extern" viewBox="0 0 12 12" width="11" height="11" aria-hidden="true" focusable="false"><path d="M7 1h4v4M11 1 5.5 6.5M9.5 7.5V11H1V2.5h3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="visually-hidden"> (öffnet in neuem Fenster)</span></a></li>
+                        <?php endif; ?>
                         <li><a href="/datenschutz"<?= ago_kalender_nav_class('datenschutz', $activeNav) ?>>Datenschutz</a></li>
                         <li><a href="/impressum"<?= ago_kalender_nav_class('impressum', $activeNav) ?>>Impressum</a></li>
                     </ul>
