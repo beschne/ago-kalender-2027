@@ -84,6 +84,13 @@ function zaehler_satz(int $bestellt): string {
     return "Bisher {$verb} <strong>{$bestellt} Kalender</strong> bestellt.";
 }
 
+// Schlüssel für alphabetische Sortierung, Umlaute wie ihr Grundbuchstabe (ohne intl-Erweiterung).
+function name_sortierschluessel(string $name): string {
+    return mb_strtolower(strtr($name, [
+        'Ä' => 'A', 'Ö' => 'O', 'Ü' => 'U', 'ä' => 'a', 'ö' => 'o', 'ü' => 'u', 'ß' => 'ss',
+    ]));
+}
+
 function verwendungszweck(string $name): string {
     return VERWENDUNGSZWECK_PRAEFIX . $name;
 }

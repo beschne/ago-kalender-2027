@@ -7,11 +7,7 @@ require __DIR__ . '/../inc/db.php';
 
 $bestellungen = ago_kalender_db()->query('SELECT * FROM bestellungen')->fetchAll();
 
-// Alphabetisch nach Name, Umlaute wie ihr Grundbuchstabe (ohne intl-Erweiterung).
-$sortierschluessel = fn(string $name) => mb_strtolower(strtr($name, [
-    'Ä' => 'A', 'Ö' => 'O', 'Ü' => 'U', 'ä' => 'a', 'ö' => 'o', 'ü' => 'u', 'ß' => 'ss',
-]));
-usort($bestellungen, fn($a, $b) => strcmp($sortierschluessel($a['name']), $sortierschluessel($b['name'])));
+usort($bestellungen, fn($a, $b) => strcmp(name_sortierschluessel($a['name']), name_sortierschluessel($b['name'])));
 
 $summeKalender = array_sum(array_column($bestellungen, 'anzahl'));
 $summeOffen = 0;

@@ -35,9 +35,49 @@ function umschalter(array $b, string $aktion, string $an, string $aus): string {
         . ($istAn ? '☑ ' . $an : '☐ ' . $aus) . '</button></form>';
 }
 
+// Sortierbare Spalten der Tabelle (Schlüssel im Link => Überschrift).
+const SORTIER_SPALTEN = [
+    'datum' => 'Datum', 'name' => 'Name', 'anzahl' => 'Anzahl', 'betrag' => 'Betrag',
+    'bezahlt' => 'Bezahlt', 'uebergeben' => 'Übergeben',
+];
+
+// Vergleicht zwei Bestellungen nach einer Spalte; bei Gleichstand entscheidet immer das
+// Bestelldatum (aufsteigend), damit die Reihenfolge stabil bleibt.
+function bestellungen_vergleichen(array $a, array $b, string $spalte, int $faktor): int {
+    $ergebnis = match ($spalte) {
+        'datum' => [$a['erstellt_am'], $a['id']] <=> [$b['erstellt_am'], $b['id']],
+        'name' => strcmp(name_sortierschluessel($a['name']), name_sortierschluessel($b['name'])),
+        'anzahl', 'betrag' => $a['anzahl'] <=> $b['anzahl'],
+        'bezahlt' => [$a['bezahlt'], (string) $a['bezahlt_am']] <=> [$b['bezahlt'], (string) $b['bezahlt_am']],
+        'uebergeben' => $a['uebergeben'] <=> $b['uebergeben'],
+        default => 0,
+    };
+    return $ergebnis * $faktor ?: [$a['erstellt_am'], $a['id']] <=> [$b['erstellt_am'], $b['id']];
+}
+
+// Spaltenüberschrift als Link: erster Klick aufsteigend, Klick auf die aktive Spalte dreht um.
+function sortier_kopf(string $spalte, string $aktiv, string $richtung, string $klasse = ''): string {
+    $istAktiv = $spalte === $aktiv;
+    $neu = $istAktiv && $richtung === 'auf' ? 'ab' : 'auf';
+    $pfeil = !$istAktiv ? '↕' : ($richtung === 'auf' ? '▲' : '▼');
+    $ariaSort = !$istAktiv ? 'none' : ($richtung === 'auf' ? 'ascending' : 'descending');
+    return '<th' . ($klasse !== '' ? ' class="' . $klasse . '"' : '') . ' aria-sort="' . $ariaSort . '">'
+        . '<a href="index.php?sort=' . $spalte . '&amp;richtung=' . $neu . '">'
+        . h(SORTIER_SPALTEN[$spalte]) . ' <span class="sortier-pfeil" aria-hidden="true">' . $pfeil . '</span></a></th>';
+}
+
 csrf_token(); // Session-Cookie muss gesetzt sein, bevor unten HTML-Ausgabe beginnt
 
-$bestellungen = $pdo->query('SELECT * FROM bestellungen ORDER BY erstellt_am, id')->fetchAll();
+// Die gewählte Sortierung bleibt in der Session, damit sie nach Häkchen, Speichern und
+// Löschen (Weiterleitung auf index.php) erhalten bleibt.
+$sortParam = $_GET['sort'] ?? null;
+if (is_string($sortParam) && isset(SORTIER_SPALTEN[$sortParam])) {
+    $_SESSION['admin_sortierung'] = [$sortParam, ($_GET['richtung'] ?? '') === 'ab' ? 'ab' : 'auf'];
+}
+[$sortSpalte, $sortRichtung] = $_SESSION['admin_sortierung'] ?? ['datum', 'auf'];
+
+$bestellungen = $pdo->query('SELECT * FROM bestellungen')->fetchAll();
+usort($bestellungen, fn($a, $b) => bestellungen_vergleichen($a, $b, $sortSpalte, $sortRichtung === 'ab' ? -1 : 1));
 
 $kalenderBestellt = 0;
 $kalenderBezahlt = 0;
@@ -134,13 +174,13 @@ $kalenderOffen = $kalenderBestellt - $kalenderBezahlt;
     <table class="admin-tabelle">
         <thead>
         <tr>
-            <th>Datum</th>
-            <th>Name</th>
-            <th class="zahl">Anzahl</th>
-            <th class="zahl">Betrag</th>
+            <?= sortier_kopf('datum', $sortSpalte, $sortRichtung) ?>
+            <?= sortier_kopf('name', $sortSpalte, $sortRichtung) ?>
+            <?= sortier_kopf('anzahl', $sortSpalte, $sortRichtung, 'zahl') ?>
+            <?= sortier_kopf('betrag', $sortSpalte, $sortRichtung, 'zahl') ?>
             <th>Bemerkung</th>
-            <th>Bezahlt</th>
-            <th>Übergeben</th>
+            <?= sortier_kopf('bezahlt', $sortSpalte, $sortRichtung) ?>
+            <?= sortier_kopf('uebergeben', $sortSpalte, $sortRichtung) ?>
             <th>Interne Notiz</th>
             <th></th>
         </tr>
