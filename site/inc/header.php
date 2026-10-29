@@ -47,12 +47,17 @@ function ago_kalender_nav_class(string $item, string $activeNav): string {
             <p id="site-description">Bestellung für Mitglieder der Astronomischen Gesellschaft Orion Bad Homburg</p>
             <a href="/" class="branding-image">
                 <?php $bannerV = @filemtime(__DIR__ . '/../img/banner-940.jpg') ?: '1'; ?>
-                <img src="/img/banner-940.jpg?v=<?= $bannerV ?>"
-                     srcset="/img/banner-300.jpg?v=<?= $bannerV ?> 300w,
-                             /img/banner-768.jpg?v=<?= $bannerV ?> 768w,
-                             /img/banner-940.jpg?v=<?= $bannerV ?> 940w"
-                     sizes="(max-width: 940px) 100vw, 940px"
-                     width="940" height="198" alt="Astronomische Gesellschaft Orion">
+                <picture>
+                    <!-- Handy: ohne Vereinsname über dem Titel, der wäre dort unlesbar klein (dev/banner.py) -->
+                    <source media="(max-width: 600px)" srcset="/img/banner-mobil-940.jpg?v=<?= $bannerV ?>">
+                    <img src="/img/banner-940.jpg?v=<?= $bannerV ?>"
+                         srcset="/img/banner-300.jpg?v=<?= $bannerV ?> 300w,
+                                 /img/banner-768.jpg?v=<?= $bannerV ?> 768w,
+                                 /img/banner-940.jpg?v=<?= $bannerV ?> 940w"
+                         sizes="(max-width: 940px) 100vw, 940px"
+                         width="940" height="198"
+                         alt="Astrokalender <?= KALENDER_JAHR ?>: Milchstraße über dem Horizont, davor Teleskop, Smartscope und Kamera">
+                </picture>
             </a>
             <nav id="access">
                 <div>

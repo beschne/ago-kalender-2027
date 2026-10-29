@@ -87,6 +87,7 @@ a {
     display: block;
 }
 
+.branding-image picture,
 .branding-image img {
     display: block;
     width: 100%;

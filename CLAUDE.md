@@ -133,7 +133,7 @@ Textvorschlag für `/datenschutz`:
     ├── datenschutz.php
     ├── impressum.php
     ├── 404.php / 50x.html     (Fehlerseiten)
-    ├── img/                   (Banner, vorschau.svg/png für die Link-Vorschau)
+    ├── img/                   (Banner aus dev/banner.py, vorschau.svg/png für die Link-Vorschau)
     ├── admin/
     │   ├── index.php          (Übersicht, Kennzahlen, bezahlt-Häkchen)
     │   ├── edit.php
