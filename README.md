@@ -1,5 +1,7 @@
 # AG Orion – Astrokalender 2027
 
+![Astrokalender 2027: Milchstraße über dem Horizont, davor Teleskop, Smartscope und Kamera](site/img/banner-940.jpg)
+
 Bestellseite für den Astrokalender der Astronomischen Gesellschaft Orion Bad Homburg e.V.
 Mitglieder bestellen über ein einfaches Formular, der Vorsitzende pflegt Bestellungen und
 Zahlungseingänge in einem geschützten Admin-Bereich.
