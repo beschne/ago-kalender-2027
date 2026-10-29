@@ -37,11 +37,10 @@ require __DIR__ . '/inc/header.php';
             </p>
 <?php if (UPLOAD_URL !== ''): ?>
             <p>
-                Ausnahme ist der Menüpunkt „Bilder hochladen“: Er führt zu einer Freigabe bei HiDrive,
-                einem Cloud-Speicher der STRATO AG mit Rechenzentren in Deutschland. Wenn du dort Bilder
-                hochlädst, gelten zusätzlich die
-                <a href="https://www.strato.de/datenschutz/">Datenschutzbestimmungen von STRATO</a>.
-                Das Hochladen ist freiwillig und hat mit deiner Bestellung nichts zu tun.
+                Ausnahme ist der Menüpunkt „Bilder hochladen“: Er führt zu unserem Speicherplatz bei
+                HiDrive, einem Cloud-Speicher der STRATO AG mit Rechenzentren in Deutschland. Dort
+                landen nur die Bilder, die du hochlädst; ein Konto brauchst du dafür nicht. Das
+                Hochladen ist freiwillig und hat mit deiner Bestellung nichts zu tun.
             </p>
 <?php endif; ?>
 
