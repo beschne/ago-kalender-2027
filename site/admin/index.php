@@ -87,6 +87,15 @@ $kalenderOffen = $kalenderBestellt - $kalenderBezahlt;
         Bestellschluss: <?= h(datum_lang(bestellschluss())) ?> –
         <?= bestellung_offen() ? '<strong>Formular ist offen</strong>' : '<strong>Formular ist geschlossen</strong>' ?>
     </p>
+    <?php $uploadUrl = upload_url(); ?>
+    <p class="admin-status upload-link">
+        Bilder-Upload (nur im Signal-Chat teilen):
+        <?php if ($uploadUrl !== ''): ?>
+            <a href="<?= h($uploadUrl) ?>" target="_blank" rel="noopener noreferrer"><?= h($uploadUrl) ?></a>
+        <?php else: ?>
+            <span class="hinweis">nicht eingerichtet, siehe DEPLOYMENT.md („Upload-Link“)</span>
+        <?php endif; ?>
+    </p>
 
     <div class="kennzahlen">
         <div class="kennzahl">

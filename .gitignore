@@ -7,3 +7,4 @@ backups/
 *.sqlite-shm
 *.csv
 deploy/traffic.sh
+SECURITY_AUDIT.md

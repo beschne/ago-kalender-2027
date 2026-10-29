@@ -69,6 +69,17 @@ ssh cerberus@92.205.236.81 'HASH=$(openssl passwd -apr1 "<passwort>"); echo "ben
 Weitere Personen als zusätzliche Zeilen `name:hash` eintragen. Die Datei liegt außerhalb des
 Webroots und ist nicht Teil des Deploys.
 
+### 6. Upload-Link (optional)
+
+Der Link zur HiDrive-Freigabe für Bilder erscheint nur im Admin-Bereich und wird aus einer
+Textdatei neben der Datenbank gelesen, damit er nicht im öffentlichen Repo steht:
+
+```bash
+ssh -i ~/.ssh/ago-sofi-deploy cerberus@92.205.236.81 'echo "https://my.hidrive.com/share/<id>" | sudo -u www-data tee /var/www/kalender.agorion.de-data/upload-url.txt > /dev/null'
+```
+
+Leeren oder löschen blendet den Link aus. Lokal: `dev-data/upload-url.txt`.
+
 ## Deploy-Ablauf (nach jeder Änderung)
 
 ```bash

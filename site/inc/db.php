@@ -3,14 +3,18 @@
 // Die Datei liegt bewusst außerhalb des Webroots und außerhalb des Git-Repos; das
 // Verzeichnis muss www-data gehören, weil SQLite dort Journal-Dateien anlegt.
 
+// Lokale Entwicklung kann den Pfad per Umgebungsvariable überschreiben.
+function ago_kalender_db_pfad(): string {
+    return getenv('AGO_KALENDER_DB') ?: '/var/www/kalender.agorion.de-data/bestellungen.sqlite';
+}
+
 function ago_kalender_db(): PDO {
     static $pdo = null;
     if ($pdo !== null) {
         return $pdo;
     }
 
-    // Lokale Entwicklung kann den Pfad per Umgebungsvariable überschreiben.
-    $pfad = getenv('AGO_KALENDER_DB') ?: '/var/www/kalender.agorion.de-data/bestellungen.sqlite';
+    $pfad = ago_kalender_db_pfad();
     if (!is_dir(dirname($pfad))) {
         throw new RuntimeException('Datenverzeichnis nicht gefunden: ' . dirname($pfad));
     }
@@ -78,4 +82,12 @@ function ago_kalender_db(): PDO {
 // Summe aller bestellten Kalender (für die öffentliche Anzeige und die Kennzahlen).
 function kalender_bestellt_summe(PDO $pdo): int {
     return (int) $pdo->query('SELECT COALESCE(SUM(anzahl), 0) FROM bestellungen')->fetchColumn();
+}
+
+// Upload-Link für Bilder (HiDrive-Freigabe), nur im Admin-Bereich angezeigt. Liegt als
+// Textdatei neben der Datenbank statt in config.php, damit er nicht im öffentlichen Repo landet.
+function upload_url(): string {
+    $datei = dirname(ago_kalender_db_pfad()) . '/upload-url.txt';
+    $url = is_readable($datei) ? trim((string) file_get_contents($datei)) : '';
+    return str_starts_with($url, 'https://') ? $url : '';
 }

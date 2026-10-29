@@ -38,7 +38,8 @@ const KONTO_BIC = 'HELADEF1TSK';
 // Bindestrich statt Gedankenstrich: SEPA erlaubt nur einen eingeschränkten Zeichensatz.
 const VERWENDUNGSZWECK_PRAEFIX = 'Astrokalender 2027 - ';
 
-// Upload-Seite für Bilder (HiDrive-Freigabe), erscheint in der Navigation. Leer = ausgeblendet.
+// Öffentlicher Navigationspunkt "Bilder hochladen". Leer = ausgeblendet. Bewusst leer: Der
+// Upload-Link steht nur im Admin-Bereich (upload-url.txt neben der Datenbank, siehe DEPLOYMENT.md).
 const UPLOAD_URL = '';
 
 const KONTAKT_NAME = 'Benno Schneider';
