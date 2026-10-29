@@ -9,8 +9,7 @@
 set -euo pipefail
 umask 077   # Backup ist von Anfang an nur für den eigenen Benutzer lesbar
 
-REMOTE_HOST="cerberus@92.205.236.81"
-SSH_KEY="$HOME/.ssh/ago-sofi-deploy"
+REMOTE_HOST="ago-server"   # SSH-Alias aus ~/.ssh/config (Server, Benutzer, Key), siehe DEPLOYMENT.md
 REMOTE_DB="/var/www/kalender.agorion.de-data/bestellungen.sqlite"
 ZIEL_DIR="$(cd "$(dirname "$0")/.." && pwd)/backups"
 
@@ -19,7 +18,7 @@ ZIEL_DATEI="$ZIEL_DIR/$ZEITSTEMPEL-ago-kalender-backup.sqlite"
 mkdir -p "$ZIEL_DIR"
 
 echo "Datenbank sichern..."
-ssh -i "$SSH_KEY" -o IdentitiesOnly=yes "$REMOTE_HOST" "
+ssh "$REMOTE_HOST" "
     set -e
     KOPIE=\$(sudo -u kalender mktemp /tmp/ago-kalender-backup.XXXXXX)
     sudo -u kalender rm -f \"\$KOPIE\"

@@ -3,10 +3,26 @@
 Die Seite wird wie ago-sofi-site **direkt vom Mac per rsync** ausgerollt. Auf dem Server
 liegt kein Git-Checkout, nur der Inhalt von `site/` unter `/var/www/kalender.agorion.de`.
 
-* Server: `92.205.236.81` (gleicher Server wie sofi.agorion.de)
-* SSH-User: `cerberus`, Deploy-Key `~/.ssh/ago-sofi-deploy` (bereits eingerichtet)
+* Server: derselbe wie sofi.agorion.de, angesprochen über den SSH-Alias `ago-server`
+* SSH-User: `cerberus`, nur Login per Key `~/.ssh/ago-sofi-deploy` (Passwort-Login ist aus)
 * Webroot: `/var/www/kalender.agorion.de` (entspricht 1:1 `site/`)
 * Datenbank: `/var/www/kalender.agorion.de-data/bestellungen.sqlite` (außerhalb des Webroots)
+
+## SSH-Zugang
+
+Alle Skripte und Befehle hier nutzen den Alias `ago-server`. Einmalig in `~/.ssh/config`:
+
+```text
+Host ago-server
+  HostName kalender.agorion.de
+  User cerberus
+  IdentityFile ~/.ssh/ago-sofi-deploy
+  IdentitiesOnly yes
+```
+
+`HostName` kann auch die IP-Adresse des Servers sein (Domain-Factory-Kundenmenü). Test:
+`ssh ago-server 'echo ok'`. Ohne Key gibt es keinen Zugang mehr; im Notfall hilft die
+Konsole im Kundenmenü.
 
 ## Einmalige Einrichtung (Schritte 1–4 erledigt am 27.10.2026, eigener PHP-Pool seit 29.10.2026)
 
@@ -19,11 +35,11 @@ weder lesen noch ändern. Die Pool-Datei liegt im Repo unter
 `/etc/php/8.2/fpm/pool.d/kalender.conf`.
 
 ```bash
-ssh cerberus@92.205.236.81 'sudo useradd --system --user-group --no-create-home --home-dir /nonexistent --shell /usr/sbin/nologin kalender'
-ssh cerberus@92.205.236.81 'sudo mkdir -p /var/www/kalender.agorion.de && sudo chown cerberus:cerberus /var/www/kalender.agorion.de && sudo chmod 755 /var/www/kalender.agorion.de'
-ssh cerberus@92.205.236.81 'sudo install -d -o kalender -g kalender -m 750 /var/www/kalender.agorion.de-data && sudo install -d -o kalender -g kalender -m 700 /var/lib/php/sessions-kalender'
-scp deploy/php/kalender.conf cerberus@92.205.236.81:/tmp/
-ssh cerberus@92.205.236.81 'sudo install -o root -g root -m 644 /tmp/kalender.conf /etc/php/8.2/fpm/pool.d/kalender.conf && rm /tmp/kalender.conf && sudo php-fpm8.2 -t && sudo systemctl reload php8.2-fpm'
+ssh ago-server 'sudo useradd --system --user-group --no-create-home --home-dir /nonexistent --shell /usr/sbin/nologin kalender'
+ssh ago-server 'sudo mkdir -p /var/www/kalender.agorion.de && sudo chown cerberus:cerberus /var/www/kalender.agorion.de && sudo chmod 755 /var/www/kalender.agorion.de'
+ssh ago-server 'sudo install -d -o kalender -g kalender -m 750 /var/www/kalender.agorion.de-data && sudo install -d -o kalender -g kalender -m 700 /var/lib/php/sessions-kalender'
+scp deploy/php/kalender.conf ago-server:/tmp/
+ssh ago-server 'sudo install -o root -g root -m 644 /tmp/kalender.conf /etc/php/8.2/fpm/pool.d/kalender.conf && rm /tmp/kalender.conf && sudo php-fpm8.2 -t && sudo systemctl reload php8.2-fpm'
 ```
 
 Der Webroot gehört `cerberus` (Deploy) und ist für PHP nur lesbar. Das Datenverzeichnis gehört
@@ -32,7 +48,7 @@ Tabelle entstehen beim ersten Seitenaufruf automatisch (`CREATE TABLE IF NOT EXI
 `site/inc/db.php`).
 
 Voraussetzung: `php8.2-sqlite3` ist installiert. Prüfen mit
-`ssh cerberus@92.205.236.81 'php8.2 -m | grep -i sqlite'`, sonst
+`ssh ago-server 'php8.2 -m | grep -i sqlite'`, sonst
 `sudo apt install php8.2-sqlite3 && sudo systemctl reload php8.2-fpm`.
 
 ### 2. Erstes Deploy
@@ -47,8 +63,8 @@ Die Konfiguration liegt unter [`deploy/nginx/kalender.agorion.de.conf`](deploy/n
 und soll 1:1 der Datei auf dem Server entsprechen.
 
 ```bash
-scp -i ~/.ssh/ago-sofi-deploy deploy/nginx/kalender.agorion.de.conf cerberus@92.205.236.81:/tmp/kalender.agorion.de.conf
-ssh cerberus@92.205.236.81 'sudo mv /tmp/kalender.agorion.de.conf /etc/nginx/sites-available/kalender.agorion.de && sudo chown root:root /etc/nginx/sites-available/kalender.agorion.de && sudo ln -sf /etc/nginx/sites-available/kalender.agorion.de /etc/nginx/sites-enabled/kalender.agorion.de && sudo nginx -t && sudo systemctl reload nginx'
+scp deploy/nginx/kalender.agorion.de.conf ago-server:/tmp/kalender.agorion.de.conf
+ssh ago-server 'sudo mv /tmp/kalender.agorion.de.conf /etc/nginx/sites-available/kalender.agorion.de && sudo chown root:root /etc/nginx/sites-available/kalender.agorion.de && sudo ln -sf /etc/nginx/sites-available/kalender.agorion.de /etc/nginx/sites-enabled/kalender.agorion.de && sudo nginx -t && sudo systemctl reload nginx'
 ```
 
 Das Access-Log der Seite (`/var/log/nginx/kalender.agorion.de-access.log`) speichert IP-Adressen
@@ -61,14 +77,14 @@ logrotate löscht es nach 14 Tagen.
 ### 4. TLS-Zertifikat
 
 ```bash
-ssh cerberus@92.205.236.81 'sudo certbot --nginx -d kalender.agorion.de --non-interactive --agree-tos -m benno.schneider@gmail.com --redirect'
+ssh ago-server 'sudo certbot --nginx -d kalender.agorion.de --non-interactive --agree-tos -m benno.schneider@gmail.com --redirect'
 ```
 
 Certbot ergänzt dabei die TLS- und Redirect-Blöcke in der Server-Konfiguration. Danach die
 Datei zurück ins Repo holen, damit Repo und Server übereinstimmen:
 
 ```bash
-ssh cerberus@92.205.236.81 'cat /etc/nginx/sites-available/kalender.agorion.de' > deploy/nginx/kalender.agorion.de.conf
+ssh ago-server 'cat /etc/nginx/sites-available/kalender.agorion.de' > deploy/nginx/kalender.agorion.de.conf
 ```
 
 ### 5. Admin-Zugang (HTTP Basic Auth)
@@ -77,7 +93,7 @@ Passwort mit bcrypt (`-B`), interaktiv abgefragt, damit es nicht in der Shell-Hi
 (`htpasswd` stammt aus `apache2-utils`):
 
 ```bash
-ssh -t cerberus@92.205.236.81 'sudo htpasswd -B -C 12 /etc/nginx/.htpasswd-kalender-admin benno && sudo chmod 640 /etc/nginx/.htpasswd-kalender-admin && sudo chown root:www-data /etc/nginx/.htpasswd-kalender-admin'
+ssh -t ago-server 'sudo htpasswd -B -C 12 /etc/nginx/.htpasswd-kalender-admin benno && sudo chmod 640 /etc/nginx/.htpasswd-kalender-admin && sudo chown root:www-data /etc/nginx/.htpasswd-kalender-admin'
 ```
 
 Beim allerersten Anlegen zusätzlich `-c`. Weitere Personen mit demselben Befehl und anderem
@@ -90,7 +106,7 @@ Der Link zur HiDrive-Freigabe für Bilder erscheint nur im Admin-Bereich und wir
 Textdatei neben der Datenbank gelesen, damit er nicht im öffentlichen Repo steht:
 
 ```bash
-ssh -i ~/.ssh/ago-sofi-deploy cerberus@92.205.236.81 'echo "https://my.hidrive.com/share/<id>" | sudo -u kalender tee /var/www/kalender.agorion.de-data/upload-url.txt > /dev/null'
+ssh ago-server 'echo "https://my.hidrive.com/share/<id>" | sudo -u kalender tee /var/www/kalender.agorion.de-data/upload-url.txt > /dev/null'
 ```
 
 Leeren oder löschen blendet den Link aus. Lokal: `dev-data/upload-url.txt`.
