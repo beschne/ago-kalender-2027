@@ -68,9 +68,8 @@ Formular. Impressum wie bei ago-sofi-site.
 * Kennzahlen oben:
   * Kalender bestellt / bezahlt / offen
   * Betrag erwartet / eingegangen / offen
-  * **Empfohlene Druckmenge = bestellte Kalender + 5, mindestens 45, höchstens 55**;
-    die Höchstmenge kürzt nur die Reserve, nie unter die bestellte Anzahl
-    (Hinweis anzeigen, wenn die Grenzen greifen)
+  * **Empfohlene Druckmenge = bestellte Kalender + 5, mindestens 45**, keine Obergrenze
+    (Saal Digital gewährt den Rabatt für jede Menge; Hinweis anzeigen, wenn die Mindestmenge greift)
 * CSV-Export (UTF-8 mit BOM, Semikolon, damit Excel/Numbers es direkt öffnen)
 * Button „Alle Bestellungen löschen“ mit Sicherheitsabfrage (für die Löschung nach Abwicklung)
 * Reservekalender werden **nicht** in der öffentlichen Seite erwähnt

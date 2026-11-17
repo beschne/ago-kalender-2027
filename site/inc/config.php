@@ -42,10 +42,10 @@ const BESTELLUNGEN_PRO_SESSION = 5;
 // Öffentliche Anzeige "Bisher wurden X Kalender bestellt" (nur Summe, keine Namen).
 const ZAEHLER_ANZEIGEN = true;
 
-// Empfohlene Druckmenge im Admin-Bereich: bestellt + Reserve, begrenzt auf Min/Max.
+// Empfohlene Druckmenge im Admin-Bereich: bestellt + Reserve, mindestens DRUCK_MIN.
+// Keine Obergrenze: Saal Digital gewährt den Rabatt für jede Menge.
 const DRUCK_RESERVE = 5;
 const DRUCK_MIN = 45;
-const DRUCK_MAX = 55;
 
 const KONTO_EMPFAENGER = 'Astronomische Gesellschaft Orion Bad Homburg e.V.';
 const KONTO_BANK = 'Taunus Sparkasse';

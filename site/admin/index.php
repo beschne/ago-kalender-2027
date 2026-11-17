@@ -160,7 +160,7 @@ $kalenderOffen = $kalenderBestellt - $kalenderBezahlt;
             <h2>Empfohlene Druckmenge</h2>
             <p class="druckmenge"><?= $druckmenge ?></p>
             <p class="hinweis">
-                bestellt + <?= DRUCK_RESERVE ?>, mindestens <?= DRUCK_MIN ?>, höchstens <?= DRUCK_MAX ?>
+                bestellt + <?= DRUCK_RESERVE ?>, mindestens <?= DRUCK_MIN ?>
             </p>
             <?php if ($druckHinweis !== null): ?>
                 <p class="warnung"><?= h($druckHinweis) ?></p>
