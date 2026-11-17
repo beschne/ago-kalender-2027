@@ -14,8 +14,24 @@ const PREIS_CENT = 1000;
 // Bestellschluss (Europe/Berlin), danach ist das Formular automatisch geschlossen.
 const BESTELLSCHLUSS = '2026-11-22 23:59:59';
 
-const UEBERGABE = 'bei der Weihnachtsfeier im Dezember 2026';
+const UEBERGABE = 'bei der Weihnachtsfeier am 18.12.2026';
 const LOESCHFRIST = '31.01.2027';
+
+// Zeitplan für die öffentliche Seite /termine, chronologisch. "datum" (JJJJ-MM-TT) wird als
+// "Fr, 20.11.2026" angezeigt, "wann" ersetzt das für ungefähre Termine. Ohne "erledigt" gilt ein
+// Termin mit Datum ab dem Folgetag als erledigt; Aufgaben besser von Hand auf true setzen.
+const TERMINE = [
+    ['datum' => '2026-10-27', 'titel' => 'Angebot der Druckerei Saal Digital liegt vor', 'erledigt' => true],
+    ['datum' => '2026-11-08', 'titel' => 'Fotos der Mitglieder gesammelt', 'erledigt' => true],
+    ['datum' => '2026-11-09', 'titel' => 'Jury beginnt mit der Bildauswahl', 'erledigt' => true],
+    ['datum' => '2026-11-12', 'titel' => 'Jury hat die Bilder ausgewählt, Gestaltung beginnt', 'erledigt' => true],
+    ['datum' => '2026-11-20', 'titel' => 'Gestaltung fertig, Testdruck bestellt', 'erledigt' => false],
+    ['datum' => '2026-11-22', 'titel' => 'Bestellschluss', 'text' => 'um 23:59 Uhr, danach nur noch per Signal oder PN an Benno'],
+    ['datum' => '2026-11-27', 'titel' => 'Testdruck geprüft, Kalender in Druck gegeben', 'erledigt' => false],
+    ['datum' => '2026-12-11', 'titel' => 'Erste Kalender für ausgewählte Mitglieder', 'erledigt' => false],
+    ['datum' => '2026-12-18', 'titel' => 'Übergabe der Kalender bei der Weihnachtsfeier', 'erledigt' => false],
+    ['datum' => '2027-01-31', 'titel' => 'Löschung aller Bestelldaten', 'text' => 'spätestens an diesem Tag', 'erledigt' => false],
+];
 
 // Grenzen für das Formular (Anzahl auch per CHECK in der Datenbank abgesichert).
 const ANZAHL_MAX = 25;

@@ -45,6 +45,15 @@ function datum_lang(DateTimeImmutable $datum): string {
     return WOCHENTAGE[(int) $datum->format('w')] . ', ' . $datum->format('d.m.Y, H:i') . ' Uhr';
 }
 
+// Termin aus TERMINE für die Anzeige: [Zeitangabe, erledigt].
+function termin_status(array $termin): array {
+    $datum = isset($termin['datum']) ? new DateTimeImmutable($termin['datum']) : null;
+    $wann = $termin['wann']
+        ?? mb_substr(WOCHENTAGE[(int) $datum->format('w')], 0, 2) . ', ' . $datum->format('d.m.Y');
+    $erledigt = $termin['erledigt'] ?? ($datum !== null && jetzt() >= $datum->modify('+1 day'));
+    return [$wann, $erledigt];
+}
+
 // ISO-8601-Text aus der Datenbank als "22.11.2026" bzw. mit Uhrzeit.
 function datum_kurz(?string $iso, bool $mitZeit = false): string {
     if ($iso === null || $iso === '') {

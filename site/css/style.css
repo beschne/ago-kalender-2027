@@ -230,6 +230,68 @@ main h2 {
     padding-left: 1.2em;
 }
 
+/* Zeitplan (/termine): mobil Datum über dem Titel, Haken links. */
+.termine {
+    list-style: none;
+    margin: 1.25rem 0;
+    padding: 0;
+}
+
+.termine li {
+    position: relative;
+    padding: 0.6rem 0 0.6rem 2.25rem;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.termine li:last-child {
+    border-bottom: 0;
+}
+
+.termin-status {
+    position: absolute;
+    left: 0;
+    top: 0.75rem;
+    width: 1.4rem;
+    height: 1.4rem;
+    border: 2px solid var(--color-border);
+    border-radius: 50%;
+    font-size: 0.85rem;
+    font-weight: 700;
+    line-height: 1.15rem;
+    text-align: center;
+}
+
+.termine .erledigt .termin-status {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: #fff;
+}
+
+.termin-wann,
+.termin-titel,
+.termin-text {
+    display: block;
+}
+
+.termin-wann {
+    font-size: 0.9em;
+    color: var(--color-muted);
+}
+
+.termin-titel {
+    font-weight: 700;
+    color: var(--color-heading);
+}
+
+.termine .erledigt .termin-titel {
+    font-weight: 300;
+    color: var(--color-muted);
+}
+
+.termin-text {
+    font-size: 0.9em;
+}
+
 /* Formular */
 .bestellformular {
     max-width: 32rem;

@@ -52,6 +52,11 @@ Muster von dort übernehmen statt neu erfinden.
 * Nach Bestellschluss: Formular ausgeblendet, Hinweistext stattdessen
 * Änderungen und Stornos laufen per PN über Benno (kein Self-Service)
 
+### Termine `/termine`
+Öffentlicher Zeitplan der Aktion (Angebot, Fotos, Testdruck, Bestellschluss, Druck, Übergabe,
+Löschung). Gepflegt in `TERMINE` in `site/inc/config.php`; erledigte Schritte werden abgehakt
+(`erledigt` von Hand, ohne Angabe automatisch ab dem Tag nach dem Datum).
+
 ### Datenschutz `/datenschutz`
 Kurzer, verständlicher Hinweis nach Art. 13 DSGVO (Text siehe unten), Link im Footer und am
 Formular. Impressum wie bei ago-sofi-site.
@@ -131,6 +136,7 @@ Textvorschlag für `/datenschutz`:
 │   └── php/kalender.conf      (eigener PHP-FPM-Pool, Benutzer kalender)
 └── site/                      ← wird auf den Server deployt
     ├── index.php              (Formular + Bestätigung)
+    ├── termine.php            (Zeitplan)
     ├── datenschutz.php
     ├── impressum.php
     ├── 404.php / 50x.html     (Fehlerseiten)

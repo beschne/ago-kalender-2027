@@ -124,6 +124,8 @@ require __DIR__ . '/inc/header.php';
                 <dd><?= h(UEBERGABE) ?></dd>
             </dl>
 
+            <p><a href="/termine">Alle Termine im Überblick</a></p>
+
             <p class="muted">
                 Ein eventueller Überschuss geht als Spende an den Verein.
             </p>
