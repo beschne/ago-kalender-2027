@@ -63,7 +63,8 @@ Formular. Impressum wie bei ago-sofi-site.
 * Kennzahlen oben:
   * Kalender bestellt / bezahlt / offen
   * Betrag erwartet / eingegangen / offen
-  * **Empfohlene Druckmenge = bestellte Kalender + 5, mindestens 45, höchstens 55**
+  * **Empfohlene Druckmenge = bestellte Kalender + 5, mindestens 45, höchstens 55**;
+    die Höchstmenge kürzt nur die Reserve, nie unter die bestellte Anzahl
     (Hinweis anzeigen, wenn die Grenzen greifen)
 * CSV-Export (UTF-8 mit BOM, Semikolon, damit Excel/Numbers es direkt öffnen)
 * Button „Alle Bestellungen löschen“ mit Sicherheitsabfrage (für die Löschung nach Abwicklung)

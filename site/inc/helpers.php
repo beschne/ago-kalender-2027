@@ -130,14 +130,19 @@ function bestellung_validieren(array $eingabe): array {
 }
 
 // Empfohlene Druckmenge: bestellt + Reserve, mindestens DRUCK_MIN, höchstens DRUCK_MAX.
+// Die Höchstmenge kürzt nur die Reserve, nie unter die bestellte Anzahl.
 // Liefert [Menge, Hinweis oder null, wenn eine Grenze greift].
 function druckmenge(int $bestellt): array {
     $roh = $bestellt + DRUCK_RESERVE;
     if ($roh < DRUCK_MIN) {
         return [DRUCK_MIN, 'Mindestmenge ' . DRUCK_MIN . ' greift (rechnerisch ' . $roh . ').'];
     }
+    if ($bestellt > DRUCK_MAX) {
+        return [$bestellt, 'Höchstmenge ' . DRUCK_MAX . ' überschritten: ' . $bestellt
+            . ' bestellt, Empfehlung ohne Reserve (rechnerisch ' . $roh . ').'];
+    }
     if ($roh > DRUCK_MAX) {
-        return [DRUCK_MAX, 'Höchstmenge ' . DRUCK_MAX . ' greift (rechnerisch ' . $roh . ').'];
+        return [DRUCK_MAX, 'Höchstmenge ' . DRUCK_MAX . ' greift, Reserve gekürzt (rechnerisch ' . $roh . ').'];
     }
     return [$roh, null];
 }
