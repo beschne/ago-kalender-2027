@@ -111,6 +111,11 @@ require __DIR__ . '/inc/header.php';
                 Hier kannst du deine Exemplare bestellen.
             </p>
 
+    <?php if ($offen): ?>
+            <p id="spruch" class="spruch" aria-live="polite" hidden></p>
+            <script src="/js/sprueche.js?v=<?= @filemtime(__DIR__ . '/js/sprueche.js') ?: '1' ?>" defer></script>
+    <?php endif; ?>
+
             <dl class="fakten">
                 <dt>Format</dt>
                 <dd><?= h(KALENDER_FORMAT) ?></dd>

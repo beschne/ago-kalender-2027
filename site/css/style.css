@@ -194,6 +194,26 @@ main h2 {
     margin: 0 0 0.6rem;
 }
 
+/* Wechselnde Sprüche auf der Startseite (js/sprueche.js), nur solange bestellt werden kann. */
+.spruch {
+    margin: 1.25rem 0;
+    padding: 0.6rem 1rem;
+    border-left: 4px solid var(--color-accent);
+    font-style: italic;
+    min-height: 3em;
+    transition: opacity 0.4s ease;
+}
+
+.spruch-aus {
+    opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .spruch {
+        transition: none;
+    }
+}
+
 .zaehler {
     margin: 1.25rem 0;
     padding: 0.6rem 1rem;
