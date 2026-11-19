@@ -26,6 +26,7 @@ const TERMINE = [
     ['datum' => '2026-11-09', 'titel' => 'Jury beginnt mit der Bildauswahl', 'erledigt' => true],
     ['datum' => '2026-11-12', 'titel' => 'Jury hat die Bilder ausgewählt, Gestaltung beginnt', 'erledigt' => true],
     ['datum' => '2026-11-17', 'titel' => 'Gestaltung freigegeben, Testdruck bestellt', 'text' => '(vorzeitig, geplant war der 20.11.2026)', 'erledigt' => true],
+    ['datum' => '2026-11-19', 'titel' => 'Testdruck angekommen', 'text' => 'Gestalter und Jury begutachten ihn, ggf. folgen noch kleine Korrekturen', 'erledigt' => true],
     ['datum' => '2026-11-22', 'titel' => 'Bestellschluss', 'text' => 'um 23:59 Uhr, danach nur noch per Signal oder PN an Benno'],
     ['datum' => '2026-11-27', 'titel' => 'Testdruck geprüft, Kalender in Druck gegeben', 'erledigt' => false],
     ['datum' => '2026-12-11', 'titel' => 'Erste Kalender für ausgewählte Mitglieder', 'erledigt' => false],
