@@ -13,3 +13,39 @@ document.addEventListener('click', function (event) {
         window.print();
     }
 });
+
+// Knopf „Nachricht“: Antworttext für Signal/PN in die Zwischenablage kopieren.
+// Ersatzweg über ein verstecktes Textfeld, falls die Clipboard-API fehlt (z. B. ohne HTTPS).
+document.addEventListener('click', function (event) {
+    var knopf = event.target.closest('[data-nachricht]');
+    if (!knopf) {
+        return;
+    }
+    var text = knopf.getAttribute('data-nachricht');
+    var bestaetigen = function () {
+        var alt = knopf.textContent;
+        knopf.textContent = '✓ kopiert';
+        setTimeout(function () { knopf.textContent = alt; }, 1500);
+    };
+    var ersatz = function () {
+        var feld = document.createElement('textarea');
+        feld.value = text;
+        feld.setAttribute('readonly', '');
+        feld.style.position = 'fixed';
+        feld.style.opacity = '0';
+        document.body.appendChild(feld);
+        feld.select();
+        var ok = document.execCommand('copy');
+        document.body.removeChild(feld);
+        if (ok) {
+            bestaetigen();
+        } else {
+            window.alert(text);
+        }
+    };
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(bestaetigen, ersatz);
+    } else {
+        ersatz();
+    }
+});

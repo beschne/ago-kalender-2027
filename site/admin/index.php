@@ -35,6 +35,53 @@ function umschalter(array $b, string $aktion, string $an, string $aus): string {
         . ($istAn ? '☑ ' . $an : '☐ ' . $aus) . '</button></form>';
 }
 
+// Antwort für Signal/PN auf die Frage „Wie viel habe ich bestellt?“. Fasst alle Bestellungen
+// mit demselben Namen zusammen (Teilbestellungen). Nur hier im Admin-Bereich, damit niemand
+// fremde Bestellungen abfragen kann, siehe BESTELLINFO.md.
+function nachricht_text(array $gruppe): string {
+    usort($gruppe, fn($a, $b) => [$a['erstellt_am'], $a['id']] <=> [$b['erstellt_am'], $b['id']]);
+    $vorname = explode(' ', $gruppe[0]['name'])[0];
+    $kalender = array_sum(array_column($gruppe, 'anzahl'));
+    $offen = 0;
+    foreach ($gruppe as $b) {
+        if (!$b['bezahlt']) {
+            $offen += $b['anzahl'] * PREIS_CENT;
+        }
+    }
+    $gesamt = $kalender * PREIS_CENT;
+
+    $zeilen = ["Hallo {$vorname},", '', "hier deine Bestellung für den AG Orion Astrokalender " . KALENDER_JAHR . ':'];
+    if (count($gruppe) === 1) {
+        $zeilen[] = "{$kalender} Kalender, " . euro($gesamt) . ' (bestellt am ' . datum_kurz($gruppe[0]['erstellt_am']) . ')';
+    } else {
+        foreach ($gruppe as $b) {
+            $zeilen[] = '• ' . datum_kurz($b['erstellt_am']) . ': ' . (int) $b['anzahl'] . ' Kalender'
+                . ($b['bezahlt'] ? ' (bezahlt)' : '');
+        }
+        $zeilen[] = "Zusammen: {$kalender} Kalender, " . euro($gesamt);
+    }
+    $zeilen[] = '';
+
+    if ($offen === 0) {
+        $zeilen[] = 'Dein Betrag ist bereits bei uns eingegangen, vielen Dank!';
+    } else {
+        $zeilen[] = ($offen < $gesamt ? 'Bereits bezahlt: ' . euro($gesamt - $offen) . '. Noch offen: ' : 'Noch offen: ')
+            . euro($offen) . '. Bitte überweise den Betrag an:';
+        $zeilen[] = KONTO_EMPFAENGER;
+        $zeilen[] = KONTO_BANK;
+        $zeilen[] = 'IBAN: ' . KONTO_IBAN;
+        $zeilen[] = 'BIC: ' . KONTO_BIC;
+        $zeilen[] = 'Verwendungszweck: ' . verwendungszweck($gruppe[0]['name']);
+    }
+    $zeilen[] = '';
+    $zeilen[] = 'Die Übergabe ist ' . UEBERGABE . '.';
+    $zeilen[] = '';
+    $zeilen[] = 'Viele Grüße';
+    $zeilen[] = explode(' ', KONTAKT_NAME)[0];
+    // Normale statt geschützter Leerzeichen, damit der Text in Signal sauber umbricht.
+    return str_replace("\u{00A0}", ' ', implode("\n", $zeilen));
+}
+
 // Sortierbare Spalten der Tabelle (Schlüssel im Link => Überschrift).
 const SORTIER_SPALTEN = [
     'datum' => 'Datum', 'name' => 'Name', 'anzahl' => 'Anzahl', 'betrag' => 'Betrag',
@@ -92,6 +139,12 @@ foreach ($bestellungen as $b) {
     }
 }
 $kalenderOffen = $kalenderBestellt - $kalenderBezahlt;
+
+// Bestellungen je Name (ohne Groß-/Kleinschreibung und Umlaut-Varianten) für die Nachricht.
+$gruppen = [];
+foreach ($bestellungen as $b) {
+    $gruppen[name_sortierschluessel($b['name'])][] = $b;
+}
 [$druckmenge, $druckHinweis] = druckmenge($kalenderBestellt);
 ?>
 <!DOCTYPE html>
@@ -207,6 +260,9 @@ $kalenderOffen = $kalenderBestellt - $kalenderBezahlt;
                 <td class="nowrap"><?= umschalter($b, 'uebergeben', 'übergeben', 'nein') ?></td>
                 <td><?= nl2br(h($b['notiz_intern'])) ?></td>
                 <td class="nowrap aktionen">
+                    <?php $gruppe = $gruppen[name_sortierschluessel($b['name'])]; ?>
+                    <button type="button" class="link-knopf" data-nachricht="<?= h(nachricht_text($gruppe)) ?>"
+                            title="Antwort für Signal/PN kopieren<?= count($gruppe) > 1 ? ' (' . count($gruppe) . ' Bestellungen zusammengefasst)' : '' ?>">Nachricht</button>
                     <a href="edit.php?id=<?= (int) $b['id'] ?>">Bearbeiten</a>
                     <form method="post" action="delete.php" data-confirm="Bestellung von <?= h($b['name']) ?> wirklich löschen?">
                         <?= csrf_field() ?>

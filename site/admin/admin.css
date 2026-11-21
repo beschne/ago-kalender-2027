@@ -213,6 +213,17 @@ table.admin-tabelle form {
     cursor: pointer;
 }
 
+.link-knopf {
+    margin-right: 0.75rem;
+    padding: 0;
+    border: none;
+    background: none;
+    color: #1982d1;
+    font: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
 .admin-anzahl {
     color: #7a7a7a;
     font-size: 0.85rem;
