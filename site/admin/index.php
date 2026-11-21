@@ -42,42 +42,41 @@ function nachricht_text(array $gruppe): string {
     usort($gruppe, fn($a, $b) => [$a['erstellt_am'], $a['id']] <=> [$b['erstellt_am'], $b['id']]);
     $vorname = explode(' ', $gruppe[0]['name'])[0];
     $kalender = array_sum(array_column($gruppe, 'anzahl'));
+
+    // Eingegangene Beträge je Zahlungsdatum, offener Rest.
+    $eingang = [];
     $offen = 0;
     foreach ($gruppe as $b) {
-        if (!$b['bezahlt']) {
-            $offen += $b['anzahl'] * PREIS_CENT;
+        $cent = $b['anzahl'] * PREIS_CENT;
+        if ($b['bezahlt']) {
+            $tag = (string) $b['bezahlt_am'];
+            $eingang[$tag] = ($eingang[$tag] ?? 0) + $cent;
+        } else {
+            $offen += $cent;
         }
     }
-    $gesamt = $kalender * PREIS_CENT;
+    ksort($eingang);
 
-    $zeilen = ["Hallo {$vorname},", '', "hier deine Bestellung für den AG Orion Astrokalender " . KALENDER_JAHR . ':'];
-    if (count($gruppe) === 1) {
-        $zeilen[] = "{$kalender} Kalender, " . euro($gesamt) . ' (bestellt am ' . datum_kurz($gruppe[0]['erstellt_am']) . ')';
-    } else {
-        foreach ($gruppe as $b) {
-            $zeilen[] = '• ' . datum_kurz($b['erstellt_am']) . ': ' . (int) $b['anzahl'] . ' Kalender'
-                . ($b['bezahlt'] ? ' (bezahlt)' : '');
+    $satz = "Hallo {$vorname}, du hast {$kalender} Kalender (" . euro($kalender * PREIS_CENT) . ') für ' . KALENDER_JAHR . ' bestellt';
+    if (count($gruppe) > 1) {
+        $teile = array_map(fn($b) => (int) $b['anzahl'] . ' am ' . datum_kurz($b['erstellt_am']), $gruppe);
+        $satz .= ': ' . implode(', ', array_slice($teile, 0, -1)) . ' und ' . end($teile);
+    }
+    $zeilen = [$satz . '.'];
+
+    if ($eingang) {
+        $teile = [];
+        foreach ($eingang as $tag => $cent) {
+            $teile[] = euro($cent) . ($tag !== '' ? ' am ' . datum_kurz($tag) : '');
         }
-        $zeilen[] = "Zusammen: {$kalender} Kalender, " . euro($gesamt);
+        $zeilen[] = 'Eingegangen: ' . implode(', ', $teile) . ($offen === 0 ? ', danke!' : '.');
     }
-    $zeilen[] = '';
-
-    if ($offen === 0) {
-        $zeilen[] = 'Dein Betrag ist bereits bei uns eingegangen, vielen Dank!';
-    } else {
-        $zeilen[] = ($offen < $gesamt ? 'Bereits bezahlt: ' . euro($gesamt - $offen) . '. Noch offen: ' : 'Noch offen: ')
-            . euro($offen) . '. Bitte überweise den Betrag an:';
-        $zeilen[] = KONTO_EMPFAENGER;
-        $zeilen[] = KONTO_BANK;
-        $zeilen[] = 'IBAN: ' . KONTO_IBAN;
-        $zeilen[] = 'BIC: ' . KONTO_BIC;
-        $zeilen[] = 'Verwendungszweck: ' . verwendungszweck($gruppe[0]['name']);
+    if ($offen > 0) {
+        // Empfängername vollständig, weil die Bank ihn beim Überweisen mit der IBAN abgleicht.
+        $zeilen[] = 'Bitte überweise ' . ($eingang ? 'die restlichen ' : '') . euro($offen) . ' an ' . KONTO_EMPFAENGER
+            . ', IBAN ' . KONTO_IBAN . ', Verwendungszweck: ' . verwendungszweck($gruppe[0]['name']);
     }
-    $zeilen[] = '';
-    $zeilen[] = 'Die Übergabe ist ' . UEBERGABE . '.';
-    $zeilen[] = '';
-    $zeilen[] = 'Viele Grüße';
-    $zeilen[] = explode(' ', KONTAKT_NAME)[0];
+    $zeilen[] = 'Übergabe ' . UEBERGABE . '. Viele Grüße, ' . explode(' ', KONTAKT_NAME)[0];
     // Normale statt geschützter Leerzeichen, damit der Text in Signal sauber umbricht.
     return str_replace("\u{00A0}", ' ', implode("\n", $zeilen));
 }

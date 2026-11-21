@@ -32,14 +32,25 @@ nichts.
 ### Variante 1: Vorbereitete Antwort aus dem Admin-Bereich (umgesetzt)
 
 In der Admin-Übersicht hat jede Zeile einen Knopf **„Nachricht“**. Er kopiert einen fertigen
-Text in die Zwischenablage, den Benno in Signal oder in eine PN einfügt:
+Text in die Zwischenablage, den Benno in eine Signal-DM oder PN einfügt. Der Text ist
+kurz gehalten, hat keine Leerzeilen und je Thema eine Zeile:
 
 * alle Bestellungen mit demselben Namen zusammengefasst (Groß-/Kleinschreibung und Umlaute
-  egal), bei mehreren mit Datum und Anzahl je Teilbestellung
-* Gesamtanzahl und Gesamtbetrag
-* Zahlungsstatus: bezahlt, offen oder teilweise bezahlt
-* bei offenem Betrag die Kontoverbindung samt Verwendungszweck
+  egal), Gesamtanzahl und Gesamtbetrag, bei mehreren mit Anzahl und Datum je Teilbestellung
+* eingegangene Beträge mit dem Datum des Eingangs
+* bei offenem Betrag Empfänger, IBAN und Verwendungszweck. BIC und Bank fehlen, weil die IBAN
+  reicht. Den Empfänger lassen wir ausgeschrieben, weil die Bank ihn beim Überweisen mit der
+  IBAN abgleicht.
 * Termin der Übergabe
+
+Beispiel (teilweise bezahlt):
+
+```text
+Hallo Max, du hast 3 Kalender (30,00 €) für 2027 bestellt: 1 am 18.11.2026 und 2 am 21.11.2026.
+Eingegangen: 10,00 € am 19.11.2026.
+Bitte überweise die restlichen 20,00 € an Astronomische Gesellschaft Orion Bad Homburg e.V., IBAN DE30 5125 0000 0001 0574 80, Verwendungszweck: Astrokalender 2027 - Max Mustermann
+Übergabe bei der Weihnachtsfeier am 18.12.2026. Viele Grüße, Benno
+```
 
 Bewertung:
 
