@@ -15,9 +15,17 @@ Live: https://kalender.agorion.de
 | Pfad | Inhalt |
 |---|---|
 | `/` | Einleitung, Bestellformular, Bestätigung mit Kontoverbindung |
+| `/termine` | Zeitplan der Kalenderaktion |
 | `/datenschutz` | Datenschutzhinweis nach Art. 13 DSGVO |
 | `/impressum` | Impressum |
-| `/admin/` | Bestellungen, Kennzahlen, Druckmenge, CSV-Export (Basic Auth) |
+| `/admin/` | Bestellungen, Kennzahlen, Druckmenge, CSV-Export, Bestellinfo als Signal-Nachricht (Basic Auth) |
 | `/admin/liste.php` | Druckbare Übergabeliste für die Weihnachtsfeier |
 
-Lokal starten und deployen: siehe [DEPLOYMENT.md](DEPLOYMENT.md).
+## Dokumentation
+
+| Datei | Inhalt |
+|---|---|
+| [DEPLOYMENT.md](DEPLOYMENT.md) | Lokal starten, Server einrichten, deployen, Backup |
+| [DATENSCHUTZ.md](DATENSCHUTZ.md) | DSGVO-Rahmen der Bestellseite: Rechtsgrundlage, gespeicherte Daten, Löschfrist |
+| [BESTELLINFO.md](BESTELLINFO.md) | Wie Mitglieder datenschutzkonform erfahren, was sie bestellt haben (Abwägung der Varianten) |
+| [SECURITY_AUDIT.md](SECURITY_AUDIT.md) | Sicherheitsprüfung von Code und Server |
