@@ -249,7 +249,7 @@ foreach ($bestellungen as $b) {
                 </td>
                 <td class="zahl"><?= (int) $b['anzahl'] ?></td>
                 <td class="zahl nowrap"><?= h(euro($b['anzahl'] * PREIS_CENT)) ?></td>
-                <td><?= nl2br(h($b['bemerkung'])) ?></td>
+                <td class="freitext"><?= nl2br(h($b['bemerkung'])) ?></td>
                 <td class="nowrap">
                     <?= umschalter($b, 'bezahlt', 'bezahlt', 'offen') ?>
                     <?php if ($b['bezahlt'] && $b['bezahlt_am']): ?>
@@ -257,7 +257,7 @@ foreach ($bestellungen as $b) {
                     <?php endif; ?>
                 </td>
                 <td class="nowrap"><?= umschalter($b, 'uebergeben', 'übergeben', 'nein') ?></td>
-                <td><?= nl2br(h($b['notiz_intern'])) ?></td>
+                <td class="freitext"><?= nl2br(h($b['notiz_intern'])) ?></td>
                 <td class="nowrap aktionen">
                     <?php $gruppe = $gruppen[name_sortierschluessel($b['name'])]; ?>
                     <button type="button" class="link-knopf" data-nachricht="<?= h(nachricht_text($gruppe)) ?>"

@@ -174,8 +174,18 @@ table.admin-tabelle form {
     white-space: nowrap;
 }
 
-.aktionen a {
-    margin-right: 0.75rem;
+/* Nachricht, Bearbeiten und Löschen untereinander, sonst wird die Tabelle breiter als die
+   Seite und bekommt eine horizontale Scrollleiste. */
+.aktionen a,
+.aktionen .link-knopf,
+table.admin-tabelle .aktionen form {
+    display: block;
+    margin: 0 0 0.3rem;
+}
+
+/* Lange Wörter in Bemerkung und Notiz umbrechen statt die Tabelle zu verbreitern. */
+table.admin-tabelle td.freitext {
+    overflow-wrap: anywhere;
 }
 
 .tag {
